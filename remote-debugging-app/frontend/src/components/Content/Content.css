@@ -1,11 +1,11 @@
 .code-textarea{
     background-color: rgb(51, 46, 46);
     color: #fff;
-    font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
-textarea{
+#id-textarea{
     height: 50vh;
-    width: 75vw;
+    width: 55vw;
     text-rendering: auto;
     color: -internal-light-dark(black, white);
     letter-spacing: normal;
@@ -30,6 +30,20 @@ textarea{
     border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
     border-image: initial;
     padding: 2px;
+    resize: none;
     
 }
+/*
+#form-div div{
+    float: left;
+    clear: none; 
+}
+#compile-output-div{
+    margin-left: 50px;
+}
+*/
+#compile-output-textarea{
+    height: 400px;
+    width: 600px;
 
+}

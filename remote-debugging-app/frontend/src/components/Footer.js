@@ -11,8 +11,9 @@ function Footer() {
   
     <div>
       <br />
+      <br />
       <hr></hr>
-      <footer style={style}>2021</footer>
+      <footer style={style}>&copy;2021</footer>
     </div>
   );
 }

@@ -12,10 +12,13 @@ class Form extends React.Component {
       scriptString: "",
       selectionStart: "",
       selectionEnd: "",
+
+      compileOutput: "",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+    this.handleSubmitFlash = this.handleSubmitFlash.bind(this);
   }
 
   handleChange(event) {
@@ -29,12 +32,26 @@ class Form extends React.Component {
     const codeBody = this.state.codeValue;
     const fileName = this.state.fileName;
     const codeSent = { codeBody, fileName };
-    axios.post("http://localhost:8081/code", codeSent).catch((err) => {
-      console.error(err);
-    });
+
+    axios
+      .post("http://192.168.0.111:8081/code", codeSent)
+      .catch((err) => {
+        console.error(err);
+      })
+      .finally(() => {
+        axios.get("http://192.168.0.111:8081/compile-output").then((res) => {
+          const compOut = JSON.stringify(res.data.data);
+          console.log("res.data:" + JSON.stringify(res.data));
+          this.setState({ compileOutput: compOut });
+        });
+      });
     console.log("frontend " + JSON.stringify(codeSent));
   }
 
+  handleSubmitFlash(event) {
+    event.preventDefault();
+    console.log("flashing..");
+  }
   handleKeyDown(event) {
     if (event.keyCode === 9) {
       // tab was pressed
@@ -53,39 +70,63 @@ class Form extends React.Component {
       );
     }
   }
-
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>Sau scrie codul direct aici:</label>
-        <br />
-        <textarea
-          id="id-textarea"
-          name="codeValue"
-          className="code-textarea"
-          value={this.state.codeValue}
-          onChange={this.handleChange}
-          onKeyDown={this.handleKeyDown}
-        />
+      <div id="div-form">
+        <form onSubmit={this.handleSubmit}>
+          <div id="form-div">
+            <div id="textarea-div">
+              <label>Or write your code here:</label>
+              <br />
+              <textarea
+                id="id-textarea"
+                name="codeValue"
+                className="code-textarea"
+                value={this.state.codeValue}
+                onChange={this.handleChange}
+                onKeyDown={this.handleKeyDown}
+              />
 
-        <br />
-        <br />
-        <label>Denumire fisier:</label>
-        <input
-          type="text"
-          name="fileName"
-          value={this.state.fileName}
-          placeholder="Numele fisierului"
-          onChange={this.handleChange}
-        />
-        <br />
-        <input
-          type="submit"
-          style={{ backgroundColor: "rgb(138, 15, 15)" }}
-          value="Send code"
-          onSubmit={this.handleSubmit}
-        />
-      </form>
+              <br />
+              <br />
+              <label>File name:&nbsp;</label>
+              <input
+                type="text"
+                name="fileName"
+                value={this.state.fileName}
+                onChange={this.handleChange}
+              />
+              <br />
+              <input
+                type="submit"
+                className="button"
+                value="Compile code"
+                onSubmit={this.handleSubmit}
+              />
+            </div>
+            <div id="compile-output-div">
+              <br />
+              <label>Compile output:</label>
+              <br />
+              <textarea
+                id="compile-output-textarea"
+                value={this.state.compileOutput}
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+        </form>
+        <form onSubmit={this.handleSubmitFlash}>
+          <br />
+          <h2>Flash target to STM8</h2>
+          <input
+            type="submit"
+            className="button"
+            value="Flash"
+            onSubmit={this.handleSubmitFlash}
+          />
+        </form>
+      </div>
     );
   }
 }

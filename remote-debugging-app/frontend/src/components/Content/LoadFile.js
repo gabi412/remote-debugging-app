@@ -10,27 +10,30 @@ class LoadFile extends React.Component {
 
   // la selectarea unui fisier
   onFileChange = (event) => {
-    
     this.setState({ selectedFile: event.target.files[0], loaded: 0 });
   };
 
- 
   onFileUpload = () => {
-
     // creare obiect de tip FormData
     const data = new FormData();
     data.append("file", this.state.selectedFile);
-    var extension = this.state.selectedFile.name.split(".")[1];
-   
-    if (!(extension === "cpp" || extension === "c")) {
-      alert("Adauga un fisier .c");
-    } else {
-      
-      //trimit fisierul catre backend
-      this.setState({valid: true});
-      axios.post("http://localhost:8081/load-file", data, {}).then((res) => {
-        console.log(res.statusText);
-      });
+    if (this.state.selectedFile != null) {
+      var extension = this.state.selectedFile.name.split(".")[1];
+
+      if (!(extension === "cpp" || extension === "c" || extension === "elf")) {
+        alert("Adauga un fisier .c/elf");
+      } else {
+        //trimit fisierul catre backend
+        this.setState({ valid: true });
+        axios
+          .post("http://192.168.0.111:8081/load-file", data, {})
+          .then((res) => {
+            console.log(res.statusText);
+          });
+      }
+    }
+    else{
+      alert("Adauga un fisier!");
     }
   };
 
@@ -39,16 +42,16 @@ class LoadFile extends React.Component {
     if (this.state.selectedFile && this.state.valid) {
       return (
         <div>
-          <h2>Fisierul tau:</h2>
-          <p>Nume: {this.state.selectedFile.name}</p>
-          <p>Tip: {this.state.selectedFile.type}</p>
+          <h2>Your file:</h2>
+          <p>Name: {this.state.selectedFile.name}</p>
+          <p>Type: {this.state.selectedFile.type}</p>
         </div>
       );
     } else {
       return (
         <div>
           <br />
-          <h4>Alege fisierul sursa apoi apasa butonul de upload.</h4>
+          <h4>Choose source file then press upload</h4>
         </div>
       );
     }
@@ -57,13 +60,13 @@ class LoadFile extends React.Component {
   render() {
     return (
       <div>
-        <h2>Incarca un fisier</h2>
+        <h2>Upload binary file</h2>
 
         <div>
           <input type="file" onChange={this.onFileChange} />
           <br />
           <br />
-          <button onClick={this.onFileUpload}>Upload!</button>
+          <button className="button" onClick={this.onFileUpload}>Upload!</button>
         </div>
         {this.fileData()}
       </div>

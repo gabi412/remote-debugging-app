@@ -1,6 +1,7 @@
 import React from "react";
 import "./Content.css";
 import Form from "./Form";
+import LoadFile from "./LoadFile"
 
 class Content extends React.Component {
   constructor(props) {
@@ -15,7 +16,9 @@ class Content extends React.Component {
 
     return (
       <div>
+        <LoadFile />
         <Form />
+        
       </div>
     );
   }
