@@ -33,17 +33,44 @@
     resize: none;
     
 }
-/*
-#form-div div{
-    float: left;
-    clear: none; 
-}
-#compile-output-div{
-    margin-left: 50px;
-}
-*/
-#compile-output-textarea{
-    height: 400px;
-    width: 600px;
 
+#flexbox-compileout-video{
+    display: flex;
+    flex-direction: row;
+}
+
+#compile-output-textarea{
+    height: 480px;
+    width: 640px;
+    margin-top: 0.5em;
+    border-radius: 5px;
+    border: 2px solid #4b0202;
+
+  
+}
+
+#video-div{
+    margin-left: 5em;
+    
+}
+.video-class{
+    border-radius: 5px;
+    border: 2px solid #4b0202;
+    
+}
+.text-title{
+    font: 18px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-weight: bold;
+    align-content: center;
+
+}
+.navbar-item{
+    font-size: 20px;
+    color: white;
+    padding: 20px;
+    
+}
+.navbar-item:hover{
+    text-decoration: none;
+    color: 4b0202;
 }

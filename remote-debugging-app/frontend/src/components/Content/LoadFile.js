@@ -20,13 +20,13 @@ class LoadFile extends React.Component {
     if (this.state.selectedFile != null) {
       var extension = this.state.selectedFile.name.split(".")[1];
 
-      if (!(extension === "cpp" || extension === "c" || extension === "elf")) {
-        alert("Adauga un fisier .c/elf");
+      if (!(extension === "ihx")) {
+        alert("Adauga un fisier .ihx");
       } else {
         //trimit fisierul catre backend
         this.setState({ valid: true });
         axios
-          .post("http://192.168.0.111:8081/load-file", data, {})
+          .post("http://192.168.0.111:8082/load-file", data, {})
           .then((res) => {
             console.log(res.statusText);
           });
@@ -44,7 +44,6 @@ class LoadFile extends React.Component {
         <div>
           <h2>Your file:</h2>
           <p>Name: {this.state.selectedFile.name}</p>
-          <p>Type: {this.state.selectedFile.type}</p>
         </div>
       );
     } else {
