@@ -7,7 +7,7 @@ class Header extends React.Component{
       <div>
         <br/>
         <br />
-        <h1 align="center" className="header-h1">Remote debugging app</h1>
+        <h1 align="center" className="header-h1">Remote Embedded Lab</h1>
             
       </div>)
   }

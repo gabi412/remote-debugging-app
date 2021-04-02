@@ -1,0 +1,72 @@
+#flexbox-schema-video-stimulus{
+    display: flex;
+    flex-direction: row;
+}
+.text-title{
+    font: 18px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-weight: bold;
+    align-content: center;
+
+}
+#stm8-schema{
+    margin-left: 15em;
+    padding: 2em;
+}
+.stm8schema-image{
+    width: 250px;
+    height: 340px;   
+}
+.dropdown-class{
+    margin-bottom: 0.4em;  
+}
+.dropdown-write-class{
+    margin-bottom: 2.6em;
+}
+.dropdownpa2-write-class{
+    margin-bottom: 6.5em;
+}
+.stm8-label{
+    margin-left: 1.5em;
+}
+
+.right-configuration-list{
+    margin-left: 0;
+    list-style-type: none;
+    position: relative;
+    left: 253;
+    bottom: 295;
+}
+
+.right-write-value-list{
+    list-style-type: none;
+    position: relative;
+    left: 370;
+    bottom: 598;
+}
+.left-configuration-list{
+    list-style-type: none;
+    position: relative;
+    left: -110;
+    bottom: 1236;
+}
+.left-write-value-list{
+    list-style-type: none;
+    position: relative;
+    left: -150;
+    bottom: 914;
+}
+.button-config{
+    position: relative;
+    left: -200;
+    bottom: 1200;
+    background-color: rgb(138, 15, 15);
+    border: none;
+    border-radius: 2px;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+}
+.button-config:hover{
+    background-color:  rgb(105, 10, 10);;
+}

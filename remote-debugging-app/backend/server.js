@@ -111,6 +111,11 @@ app.post("/flashing",(req,res)=>{
 	
 	}
 });
+app.post("/config",(req,res)=>{
+  var values = req.body.values;
+  var configIO = req.body.configuration;
+  console.log(values +'\n',configIO);
+})
 
 const host = 'l27.0.0.1';
 const port = 8082;

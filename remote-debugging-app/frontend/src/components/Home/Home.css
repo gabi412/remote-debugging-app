@@ -1,0 +1,58 @@
+.code-textarea{
+    background-color: rgb(51, 46, 46);
+    color: #fff;
+    font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+}
+#id-textarea{
+    height: 50vh;
+    width: 55vw;
+    text-rendering: auto;
+    color: -internal-light-dark(black, white);
+    letter-spacing: normal;
+    word-spacing: normal;
+    text-transform: none;
+    text-indent: 0px;
+    text-shadow: none;
+    display: inline-block;
+    text-align: start;
+    appearance: textarea;
+    background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
+    -webkit-rtl-ordering: logical;
+    flex-direction: column;
+    resize: auto;
+    cursor: text;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+    margin: 0em;
+    font: 400 13.3333px Arial;
+    border-width: 1px;
+    border-style: solid;
+    border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+    border-image: initial;
+    padding: 2px;
+    resize: none;
+    
+}
+
+#flexbox-compileout-video{
+    display: flex;
+    flex-direction: row;
+}
+
+#compile-output-textarea{
+    height: 480px;
+    width: 640px;
+    margin-top: 0.5em;
+    border-radius: 5px;
+    border: 2px solid #4b0202;
+}
+
+#video-div{
+    margin-left: 5em;
+    
+}
+.video-class{
+    border-radius: 5px;
+    border: 2px solid #4b0202;
+    
+}

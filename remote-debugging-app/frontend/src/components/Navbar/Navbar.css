@@ -1,15 +1,10 @@
-.fa-react{
-margin-left:0.5rem;
-font-size: 1.6rem;
+.navbar-item{
+    font-size: 20px;
+    color: white;
+    padding: 20px;
+    
 }
-
-.nav-menu {
-    display: grid;
-    grid-template-columns: repeat(5,auto);
-    grid-gap: 10px;
-    list-style: none;
-    text-align: center;
-    width: 70vw;
-    justify-content: end;
-  
+.navbar-item:hover{
+    text-decoration: none;
+    color: 4b0202;
 }

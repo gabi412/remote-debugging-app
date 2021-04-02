@@ -1,11 +1,11 @@
 import React from "react";
 import Header from "./components/Header/Header";
 import NavBar from "./components/Navbar/NavBar";
-import Content from "./components/Content/Content";
+import Home from "./components/Home/Home";
 import Footer from "./components/Footer";
-import Stimulus from "./components/Stimulus";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
+import ControlPins from "./components/ControlPins/ControlPins";
 
 function App() {
   return (
@@ -17,11 +17,12 @@ function App() {
           <Switch>
             <Route exact path="/">
               <Header />
-              <Content />
+              <Home />
+              <Footer />
             </Route>
-            <Route path="/stimulus">
+            <Route path="/control-pins">
               <Header />
-              <Stimulus />
+              <ControlPins />
               <Footer />
             </Route>
           </Switch>
