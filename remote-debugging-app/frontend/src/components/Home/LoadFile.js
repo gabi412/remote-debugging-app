@@ -21,7 +21,7 @@ class LoadFile extends React.Component {
       var extension = this.state.selectedFile.name.split(".")[1];
 
       if (!(extension === "ihx")) {
-        alert("Adauga un fisier .ihx");
+        alert("Add a .ihx file!");
       } else {
         //trimit fisierul catre backend
         this.setState({ valid: true });
@@ -42,7 +42,7 @@ class LoadFile extends React.Component {
     if (this.state.selectedFile && this.state.valid) {
       return (
         <div>
-          <h2>Your file:</h2>
+          <h2>File uploaded!</h2>
           <p>Name: {this.state.selectedFile.name}</p>
         </div>
       );

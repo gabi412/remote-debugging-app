@@ -2,39 +2,62 @@ import React from "react";
 import "./ControlPins.css";
 import photo from "./stm8blue-pinout.png";
 import WriteValue from "./WriteValue";
-import axios from "axios";
+import ReadValue from "./ReadValue";
 
 class Config extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       config: {
-        inoutValuePD3: "iPD3",
-        inoutValuePD2: "iPD2",
-        inoutValuePD1: "iPD1",
-        inoutValuePC7: "iPC7",
-        inoutValuePC6: "iPC6",
-        inoutValuePC5: "iPC5",
-        inoutValuePC4: "iPC4",
-        inoutValuePC3: "iPC3",
-        inoutValuePB4: "iPB4",
-        inoutValuePB5: "iPB5",
-        inoutValuePD4: "iPD4",
-        inoutValuePD5: "iPD5",
-        inoutValuePD6: "iPD6",
-        inoutValuePA1: "iPA1",
-        inoutValuePA2: "iPA2",
-        inoutValuePA3: "iPA3",
+        PD4: "iPD4",
+        PD5: "iPD5",
+        PD6: "iPD6",
+        PA1: "iPA1",
+        PA2: "iPA2",
+        PA3: "iPA3",
+        PD3: "iPD3",
+        PD2: "iPD2",
+        PD1: "iPD1",
+        PC7: "iPC7",
+        PC6: "iPC6",
+        PC5: "iPC5",
+        PC4: "iPC4",
+        PC3: "iPC3",
+        PB4: "iPB4",
+        PB5: "iPB5",
       },
-      valState: null
+      valState: {
+        PD4: "0PD4",
+        PD5: "0PD5",
+        PD6: "0PD6",
+        PA1: "0PA1",
+        PA2: "0PA2",
+        PA3: "0PA3",
+        PD3: "0PD3",
+        PD2: "0PD2",
+        PD1: "0PD1",
+        PC7: "0PC7",
+        PC6: "0PC6",
+        PC5: "0PC5",
+        PC4: "0PC4",
+        PC3: "0PC3",
+        PB4: "0PB4",
+        PB5: "0PB5",
+      },
     };
     this.handleInOutChange = this.handleInOutChange.bind(this);
     this.sendInOutChanges = this.sendInOutChanges.bind(this);
     this.getWriteVal = this.getWriteVal.bind(this);
   }
-  
-  getWriteVal(writeVal){
-    this.setState({valState:writeVal})
+
+  getWriteVal(writeVal) {
+    this.setState({ valState: writeVal });
+  }
+
+  componentDidMount() {
+    // this.setState({valstate:})
+
+    console.log("in config " + this.state.valState);
   }
 
   handleInOutChange(event) {
@@ -43,90 +66,112 @@ class Config extends React.Component {
     switch (pinName) {
       case "oPD3":
       case "iPD3":
-        tempState.inoutValuePD3 = event.target.value;
+        tempState.PD3 = event.target.value;
         break;
       case "iPD2":
       case "oPD2":
-        tempState.inoutValuePD2 = event.target.value;
+        tempState.PD2 = event.target.value;
         break;
       case "iPD1":
       case "oPD1":
-        tempState.inoutValuePD1 = event.target.value;
+        tempState.PD1 = event.target.value;
         break;
       case "iPD6":
       case "oPD6":
-        tempState.inoutValuePD6 = event.target.value;
+        tempState.PD6 = event.target.value;
         break;
-      case "iD5":
+      case "iPD5":
       case "oPD5":
-        tempState.inoutValuePD5 = event.target.value;
+        tempState.PD5 = event.target.value;
         break;
       case "iPD4":
       case "oPD4":
-        tempState.inoutValuePD4 = event.target.value;
+        tempState.PD4 = event.target.value;
         break;
       case "iPC7":
       case "oPC7":
-        tempState.inoutValuePC7 = event.target.value;
+        tempState.PC7 = event.target.value;
         break;
       case "iPC6":
       case "oPC6":
-        tempState.inoutValuePC6 = event.target.value;
+        tempState.PC6 = event.target.value;
         break;
       case "iPC5":
       case "oPC5":
-        tempState.inoutValuePC5 = event.target.value;
+        tempState.PC5 = event.target.value;
         break;
       case "iPC4":
       case "oPC4":
-        tempState.inoutValuePC4 = event.target.value;
+        tempState.PC4 = event.target.value;
         break;
       case "iPC3":
       case "oPC3":
-        tempState.inoutValuePC3 = event.target.value;
+        tempState.PC3 = event.target.value;
         break;
       case "iPB4":
       case "oPB4":
-        tempState.inoutValuePB4 = event.target.value;
+        tempState.PB4 = event.target.value;
         break;
       case "iPB5":
       case "oPB5":
-        tempState.inoutValuePB5 = event.target.value;
+        tempState.PB5 = event.target.value;
         break;
       case "iPA1":
       case "oPA1":
-        tempState.inoutValuePA1 = event.target.value;
+        tempState.PA1 = event.target.value;
         break;
       case "iPA2":
       case "oPA2":
-        tempState.inoutValuePA2 = event.target.value;
+        tempState.PA2 = event.target.value;
         break;
       case "iPA3":
       case "oPA3":
-        tempState.inoutValuePA3 = event.target.value;
+        tempState.PA3 = event.target.value;
         break;
       default:
     }
     this.setState({ config: tempState });
-  //  console.log(this.state.config);
+    //  console.log(this.state.config);
   }
 
   sendInOutChanges(event) {
     event.preventDefault();
+    /*
     axios
       .post("http://192.168.0.111:8082/config", {
         configuration: this.state.config,
-        values:this.state.valState
+        values: this.state.valState,
       })
       .catch((err) => {
         console.error(err);
+      });
+      */
+    fetch("http://192.168.0.111:8082/config", {
+      method: "POST",
+      mode: "cors", // no-cors, *cors, same-origin
+      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: "same-origin", // include, *same-origin, omit
+      headers: {
+        "Content-Type": "application/json",
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: JSON.stringify({
+        configuration: this.state.config,
+        values: this.state.valState,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
   }
 
   render() {
     return (
       <div>
-        {console.log(this.state.valState)}
         <div id="stm8-schema">
           <br />
           <label className="text-title">Stm8 schema</label>
@@ -134,12 +179,14 @@ class Config extends React.Component {
           <img className="stm8schema-image" src={photo} alt="Stm8 schema"></img>
 
           {/* set input/output list for right side pins */}
+          <label className="right-text-config">Config</label>
+
           <ul className="right-configuration-list">
             <li>
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePD3}
+                value={this.PD3}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPD3">
@@ -154,7 +201,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePD2}
+                value={this.PD2}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPD2">
@@ -169,7 +216,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePD1}
+                value={this.PD1}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPD1">
@@ -184,7 +231,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePC7}
+                value={this.PC7}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPC7">
@@ -199,7 +246,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePC6}
+                value={this.PC6}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPC6">
@@ -213,7 +260,7 @@ class Config extends React.Component {
             <select
               className="dropdown-class"
               name="configuration"
-              value={this.inoutValuePC5}
+              value={this.PC5}
               onChange={this.handleInOutChange}
             >
               <option id="0" value="iPC5">
@@ -227,7 +274,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePC4}
+                value={this.PC4}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPC4">
@@ -241,7 +288,7 @@ class Config extends React.Component {
             <select
               className="dropdown-class"
               name="configuration"
-              value={this.inoutValuePC3}
+              value={this.PC3}
               onChange={this.handleInOutChange}
             >
               <option id="0" value="iPC3">
@@ -255,7 +302,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePB4}
+                value={this.PB4}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPB4">
@@ -270,7 +317,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePB5}
+                value={this.PB5}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPB5">
@@ -285,16 +332,21 @@ class Config extends React.Component {
 
           {/* set 0/1 value list for all pins */}
 
-          <WriteValue getWriteValCallback = {this.getWriteVal} />
+          <WriteValue
+            getWriteValCallback={this.getWriteVal}
+            inoutState={this.state.config}
+          />
+          <ReadValue />
 
           {/* set input/output list for left side pins */}
+          <label className="left-text-config">Config</label>
 
           <ul className="left-configuration-list">
             <li>
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePD4}
+                value={this.PD4}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPD4">
@@ -309,7 +361,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePD5}
+                value={this.PD5}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPD5">
@@ -324,7 +376,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePD6}
+                value={this.PD6}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPD6">
@@ -344,7 +396,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePA1}
+                value={this.PA1}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPA1">
@@ -359,7 +411,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePA2}
+                value={this.PA2}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPA2">
@@ -389,7 +441,7 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.inoutValuePA3}
+                value={this.PA3}
                 onChange={this.handleInOutChange}
               >
                 <option id="0" value="iPA3">
@@ -402,12 +454,9 @@ class Config extends React.Component {
             </li>
           </ul>
           <form onSubmit={this.sendInOutChanges}>
-            <input
-              type="submit"
-              className="button-config"
-              value="Apply changes"
-              onSubmit={this.sendInOutChanges}
-            />
+            <button type="submit" className="button-config">
+              Apply changes
+            </button>
           </form>
         </div>
       </div>

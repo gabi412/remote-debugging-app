@@ -1,64 +1,129 @@
-#flexbox-schema-video-stimulus{
+#flexbox-schema-video-stimulus {
     display: flex;
     flex-direction: row;
 }
-.text-title{
+
+.text-title {
     font: 18px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-weight: bold;
     align-content: center;
-
 }
-#stm8-schema{
+
+#stm8-schema {
     margin-left: 15em;
     padding: 2em;
+    position: relative
 }
-.stm8schema-image{
+
+.stm8schema-image {
     width: 250px;
-    height: 340px;   
+    height: 340px;
 }
-.dropdown-class{
-    margin-bottom: 0.4em;  
+
+.dropdown-class, .read-box {
+    margin-bottom: 0.4em;
+    height: 22px
 }
-.dropdown-write-class{
-    margin-bottom: 2.6em;
+
+.dropdownpd6-write-class {
+    margin-bottom: 2.3em;
+    height: 22px
 }
-.dropdownpa2-write-class{
-    margin-bottom: 6.5em;
+
+.dropdownpa2-write-class {
+    margin-bottom: 6em;
+    height: 22px
 }
-.stm8-label{
+
+.stm8-label {
     margin-left: 1.5em;
+    height: 22px;
 }
 
-.right-configuration-list{
-    margin-left: 0;
+.right-configuration-list {
     list-style-type: none;
-    position: relative;
-    left: 253;
-    bottom: 295;
+    position: absolute;
+    top: 27%;
+    right: -26%;
 }
 
-.right-write-value-list{
+.right-write-value-list {
     list-style-type: none;
-    position: relative;
-    left: 370;
-    bottom: 598;
+    position: absolute;
+    top: 27%;
+    right: -42%;
 }
-.left-configuration-list{
+
+.right-read-value-list {
     list-style-type: none;
-    position: relative;
-    left: -110;
-    bottom: 1236;
+    position: absolute;
+    top: 27%;
+    right: -58%;
 }
-.left-write-value-list{
+
+.left-configuration-list {
     list-style-type: none;
-    position: relative;
-    left: -150;
-    bottom: 914;
+    position: absolute;
+    top: 27%;
+    right: 93%;
 }
-.button-config{
-    position: relative;
-    left: -200;
-    bottom: 1200;
+
+.left-write-value-list {
+    list-style-type: none;
+    position: absolute;
+    top: 27%;
+    right: 133%;
+}
+
+.left-read-value-list {
+    list-style-type: none;
+    position: absolute;
+    top: 27%;
+    right: 150%;
+}
+
+/* labels for read write and config options */
+
+.right-text-read {
+    position: absolute;
+    top: 18%;
+    right: -60%;
+}
+
+.right-text-write {
+    position: absolute;
+    top: 18%;
+    right: -42%;
+}
+
+.right-text-config {
+    position: absolute;
+    top: 18%;
+    right: -15%;
+}
+
+.left-text-read {
+    position: absolute;
+    top: 18%;
+    right: 148%;
+}
+
+.left-text-write {
+    position: absolute;
+    top: 18%;
+    right: 132%;
+}
+
+.left-text-config {
+    position: absolute;
+    top: 18%;
+    right: 105%;
+}
+
+.button-config {
+    position: absolute;
+    top: 100%;
+    right: 113%;
     background-color: rgb(138, 15, 15);
     border: none;
     border-radius: 2px;
@@ -67,6 +132,21 @@
     text-align: center;
     text-decoration: none;
 }
-.button-config:hover{
-    background-color:  rgb(105, 10, 10);;
+
+.button-write {
+    position: absolute;
+    top: 100%;
+    right: 60%;
+    background-color: rgb(138, 15, 15);
+    border: none;
+    border-radius: 2px;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+}
+
+.button-config:hover {
+    background-color: rgb(105, 10, 10);
+    ;
 }

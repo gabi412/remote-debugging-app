@@ -35,15 +35,18 @@ class Form extends React.Component {
     const codeBody = this.state.codeValue;
     const fileName = this.state.fileName;
     const codeSent = { codeBody, fileName };
-    if (fileName.length < 2) {
-      alert("File name must not be null");
+    var regExFilename = new RegExp("^.+.c$")
+    if (fileName.length < 2 || !regExFilename.test(fileName)) {
+      alert(`Wrong filename.\nInsert a name like "filename.c"`);
       this.setState({ isNameNull: true });
     } else {
       this.setState({ isNameNull: false });
       axios
         .post("http://192.168.0.111:8082/code", codeSent)
         .catch((err) => {
-          console.error(err);
+          console.error("myerr " + err);
+          alert("Something went wrong with the server..");
+          this.setState({isLoading:false})
         })
         .finally(() => {
           axios
@@ -70,6 +73,7 @@ class Form extends React.Component {
     event.preventDefault();
     console.log("flashing..");
     this.setState({ flashing: true }, function () {
+      console.log("First Flashing val:" + this.state.flashing);
       axios
         .post("http://192.168.0.111:8082/flashing", {
           flashValue: this.state.flashing,
@@ -77,8 +81,9 @@ class Form extends React.Component {
         .catch((err) => {
           console.error(err);
         });
+      this.setState({ flashing: false });
     });
-    console.log("Flashing val:" + this.state.flashing);
+    console.log("Last Flashing val:" + this.state.flashing);
   }
 
   handleKeyDown(event) {
@@ -100,7 +105,7 @@ class Form extends React.Component {
     }
   }
   render() {
-    if (this.state.isLoading && this.state.isNameNull === false) {
+    if (this.state.isLoading && !this.state.isNameNull) {
       return <div>Compiling code...</div>;
     } else {
       return (
@@ -159,11 +164,9 @@ class Form extends React.Component {
           <form onSubmit={this.handleSubmitFlash}>
             <br />
             <h2>Flash target to STM8</h2>
-            <input
-              type="submit"
-              className="button"
-              value="Flash"
-            />
+            <button type="submit" className="button">
+              Flash
+            </button>
           </form>
         </div>
       );
