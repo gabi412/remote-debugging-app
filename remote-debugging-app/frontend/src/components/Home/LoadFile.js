@@ -24,15 +24,20 @@ class LoadFile extends React.Component {
         alert("Add a .ihx file!");
       } else {
         //trimit fisierul catre backend
-        this.setState({ valid: true });
+
         axios
           .post("http://192.168.0.111:8082/load-file", data, {})
           .then((res) => {
+            this.setState({ valid: true });
             console.log(res.statusText);
+          })
+          .catch((err) => {
+            console.error("myerr " + err);
+            alert("Something went wrong with the server..\nPlease try again");
+            this.setState({ isLoading: false });
           });
       }
-    }
-    else{
+    } else {
       alert("Adauga un fisier!");
     }
   };
@@ -65,7 +70,9 @@ class LoadFile extends React.Component {
           <input type="file" onChange={this.onFileChange} />
           <br />
           <br />
-          <button className="button" onClick={this.onFileUpload}>Upload!</button>
+          <button className="button" onClick={this.onFileUpload}>
+            Upload!
+          </button>
         </div>
         {this.fileData()}
       </div>

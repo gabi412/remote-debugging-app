@@ -35,9 +35,9 @@ class Form extends React.Component {
     const codeBody = this.state.codeValue;
     const fileName = this.state.fileName;
     const codeSent = { codeBody, fileName };
-    var regExFilename = new RegExp("^.+.c$")
+    var regExFilename = new RegExp("^.+.c$");
     if (fileName.length < 2 || !regExFilename.test(fileName)) {
-      alert(`Wrong filename.\nInsert a name like "filename.c"`);
+      alert(`Wrong filename.\nChoose a name like "filename.c"`);
       this.setState({ isNameNull: true });
     } else {
       this.setState({ isNameNull: false });
@@ -46,19 +46,16 @@ class Form extends React.Component {
         .catch((err) => {
           console.error("myerr " + err);
           alert("Something went wrong with the server..");
-          this.setState({isLoading:false})
+          this.setState({ isLoading: false });
         })
         .finally(() => {
           axios
             .get("http://192.168.0.111:8082/compile-output")
             .then((res) => {
-              const compOut = JSON.stringify(res.data.data).replace(
-                /(\r\n|\n|\r)/gm,
-                ""
-              );
+              const compOut = JSON.stringify(res.data.data); //.replace( /(?:\r\n|\r|\n)/g,"\n" );
               //   console.log("res.data:" + JSON.stringify(res.data));
               this.setState({ compileOutput: compOut });
-              console.log(compOut);
+           //   console.log(compOut.replace(/(?:\r\n|\r|\n)/g, "\n"));
             })
             .finally(() => {
               this.setState({ isLoading: false });

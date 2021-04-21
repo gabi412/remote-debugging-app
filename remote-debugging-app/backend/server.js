@@ -82,8 +82,7 @@ app.post("/code", (req, res) => {
   );
   currentFile = path.parse(fileName).name + ".ihx";
   // const move = cp.exec(`mv ~/backend/${sourceNameFile}.* ~/backend/public/programs-sent` );
-  // console.log("\nIn post: " + compileData);
-  // console.log("\nNumele ihx:" + currentFile);
+  // res.send();
 });
 
 app.get("/compile-output", (req, res) => {
@@ -120,84 +119,139 @@ app.post("/flashing", (req, res) => {
       }
     );
   }
+  res.send(flashVal);
 });
-var readValues = {};
+var readValues = {
+  PD4: "",
+  PD5: "",
+  PD6: "",
+  PA1: "",
+  PA2: "",
+  PA3: "",
+  PD3: "",
+  PD2: "",
+  PD1: "",
+  PC7: "",
+  PC6: "",
+  PC5: "",
+  PC4: "",
+  PC3: "",
+  PB4: "",
+  PB5: "",
+};
+var pin4 = new Gpio(4, "in");
+var pin17 = new Gpio(17, "in");
+var pin27 = new Gpio(27, "in");
+var pin22 = new Gpio(22, "in");
+var pin0 = new Gpio(0,"in");
+var pin5 = new Gpio(5,"in");
+
 app.post("/config", (req, res) => {
-    var values = req.body.values;
-    var configIO = req.body.configuration;
+  readValues = {
+    PD4: "",
+    PD5: "",
+    PD6: "",
+    PA1: "",
+    PA2: "",
+    PA3: "",
+    PD3: "",
+    PD2: "",
+    PD1: "",
+    PC7: "",
+    PC6: "",
+    PC5: "",
+    PC4: "",
+    PC3: "",
+    PB4: "",
+    PB5: "",
+  };
+  var values = req.body.values;
+  var configIO = req.body.configuration;
 
   configData = JSON.parse(JSON.stringify(configIO));
-  console.log(configData);
+//  console.log(configData);
   writeVal = JSON.parse(JSON.stringify(values));
   console.log(writeVal);
 
   Object.keys(configData).forEach(function (key) {
     //  console.log("Key : " + key + ", Value : " + configData[key]);
-
     var configOption = configData[key].substr(0, 1);
 
     if (key == "PD4") {
-      var pin4 = new Gpio(4, "in");
       if (configOption == "i") {
         pin4.setDirection("out");
         pin4.writeSync(parseInt(writeVal["PD4"].substr(0, 1)));
       } else {
         pin4.setDirection("in");
-        readValues["PD4"] = pin4.readSync();
       }
     }
     if (key == "PD5") {
-      var pin17 = new Gpio(17, "in");
       if (configOption == "i") {
         pin17.setDirection("out");
         pin17.writeSync(parseInt(writeVal["PD5"].substr(0, 1)));
       } else {
         pin17.setDirection("in");
-        readValues["PD5"] = pin17.readSync();
       }
     }
 
     if (key == "PD6") {
       if (configOption == "i") {
-        var pin27 = new Gpio(27, "out");
+        pin27.setDirection("out");
         pin27.writeSync(parseInt(writeVal["PD6"].substr(0, 1)));
       } else {
-        var pin27 = new Gpio(27, "in");
+        pin27.setDirection("in");
       }
     }
     if (key == "PA1") {
       if (configOption == "i") {
-        var pin22 = new Gpio(22, "out");
+        pin22.setDirection("out");
         pin22.writeSync(parseInt(writeVal["PA1"].substr(0, 1)));
       } else {
-        var pin22 = new Gpio(22, "in");
+        pin22.setDirection("in");
       }
-      var val = pin22.readSync();
-      console.log("pin22 val " + val);
     }
     if (key == "PA2") {
       if (configOption == "i") {
-        var pin0 = new Gpio(0, "out");
-        pin0.writeSync(writeVal["PA2"]);
+        pin0.setDirection("out");
+        pin0.writeSync(parseInt(writeVal["PA2"].substr(0, 1)));
       } else {
-        var pin0 = new Gpio(0, "in");
+        pin0.setDirection("in");
       }
     }
     if (key == "PA3") {
       if (configOption == "i") {
-        var pin5 = new Gpio(5, "out");
-        pin5.writeSync(writeVal["PA3"]);
+        pin5.setDirection("out");
+        pin5.writeSync(parseInt(writeVal["PA3"].substr(0, 1)));
       } else {
-        var pin5 = new Gpio(5, "in");
+        pin5.setDirection("in");
       }
     }
   });
   console.log(JSON.stringify(readValues));
+  res.send(JSON.stringify(readValues));
 });
 
 app.get("/get-values", (req, res) => {
-  console.log("\nIn get-values: " + readValues);
-  res.send({ readVal: JSON.stringify(readValues) });
+  //  console.log("\nIn get-values: " + JSON.stringify(readValues));
+  if(pin4.direction() === 'in'){
+    readValues["PD4"] = pin4.readSync();
+  }
+  if(pin17.direction() === 'in'){
+    readValues["PD5"] = pin17.readSync();
+  }
+  if(pin27.direction() === 'in'){
+    readValues["PD6"] = pin27.readSync();
+  }
+  if(pin22.direction() === 'in'){
+    readValues["PA1"] = pin22.readSync();
+  }
+  if(pin0.direction() === 'in'){
+    readValues["PA2"] = pin0.readSync();
+  }
+  if(pin5.direction() === 'in'){
+    readValues["PA3"] = pin5.readSync();
+  }
+  res.send(JSON.stringify(readValues));
 });
 
 const host = "127.0.0.1";

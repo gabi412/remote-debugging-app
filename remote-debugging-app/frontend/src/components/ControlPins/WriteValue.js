@@ -25,10 +25,9 @@ class WriteValue extends React.Component {
       },
     };
     this.handleWriteValChange = this.handleWriteValChange.bind(this);
-    //   this.sendInOutChanges = this.sendInOutChanges.bind(this);
   }
   componentDidMount(){
-    console.log(this.state.writeValList);
+  //  console.log(this.state.writeValList);
     
   }
   handleWriteValChange(event) {
