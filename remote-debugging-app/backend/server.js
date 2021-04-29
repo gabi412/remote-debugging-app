@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 var multer = require("multer");
 const cp = require("child_process");
-
+const util = require("util");
 const app = express();
 
 var Gpio = require("onoff").Gpio;
@@ -63,7 +63,8 @@ app.post("/code", (req, res) => {
   const result = cp.execFile(
     compileScript,
     [`${folder}/${fileName}`],
-    function (err) {
+    function (error, stdout, stderr) {
+  
       fs.readFile(
         `${folder}/${compileOutputFile}`,
         "utf8",
@@ -81,12 +82,10 @@ app.post("/code", (req, res) => {
     }
   );
   currentFile = path.parse(fileName).name + ".ihx";
-  // const move = cp.exec(`mv ~/backend/${sourceNameFile}.* ~/backend/public/programs-sent` );
   // res.send();
 });
 
 app.get("/compile-output", (req, res) => {
-  console.log("\nIn get: " + compileData);
   res.send({ data: compileData });
 });
 
@@ -106,21 +105,27 @@ app.post("/load-file", (req, res) => {
   }
 });
 app.post("/flashing", (req, res) => {
-  console.log("\nFlashing: " + JSON.stringify(req.body.flashValue));
+  //  console.log("\nFlashing: " + JSON.stringify(req.body.flashValue));
   var flashVal = JSON.stringify(req.body.flashValue);
   var compilePath = "./public/programs-sent";
   if (flashVal === "true") {
-    cp.exec(
+    cp.execSync(
       `./stm8flash -c stlinkv2 -p stm8s103f3 -w ${compilePath}/${currentFile}`,
       (error, stdout, stderr) => {
         if (error) {
           console.log(`error:${error.message}`);
         }
+        console.log("next");
+        const removeFiles = cp.exec(
+          `rm ~/backend/public/programs-sent/${currentFile}.*`
+        );
+
       }
     );
   }
   res.send(flashVal);
 });
+
 var readValues = {
   PD4: "",
   PD5: "",
@@ -143,33 +148,19 @@ var pin4 = new Gpio(4, "in");
 var pin17 = new Gpio(17, "in");
 var pin27 = new Gpio(27, "in");
 var pin22 = new Gpio(22, "in");
-var pin0 = new Gpio(0,"in");
-var pin5 = new Gpio(5,"in");
+var pin0 = new Gpio(0, "in");
+var pin5 = new Gpio(5, "in");
 
 app.post("/config", (req, res) => {
-  readValues = {
-    PD4: "",
-    PD5: "",
-    PD6: "",
-    PA1: "",
-    PA2: "",
-    PA3: "",
-    PD3: "",
-    PD2: "",
-    PD1: "",
-    PC7: "",
-    PC6: "",
-    PC5: "",
-    PC4: "",
-    PC3: "",
-    PB4: "",
-    PB5: "",
-  };
+  Object.keys(readValues).forEach(function (kkey) {
+    //   console.log("Key : " + kkey + ", Value : " + readValues[kkey]);
+    readValues[kkey] = "";
+  });
   var values = req.body.values;
   var configIO = req.body.configuration;
 
   configData = JSON.parse(JSON.stringify(configIO));
-//  console.log(configData);
+  //  console.log(configData);
   writeVal = JSON.parse(JSON.stringify(values));
   console.log(writeVal);
 
@@ -233,22 +224,23 @@ app.post("/config", (req, res) => {
 
 app.get("/get-values", (req, res) => {
   //  console.log("\nIn get-values: " + JSON.stringify(readValues));
-  if(pin4.direction() === 'in'){
+  // trebuie sa citesc pinii la un interval de 3 secunde, si ii actualizez in apelul get
+  if (pin4.direction() === "in") {
     readValues["PD4"] = pin4.readSync();
   }
-  if(pin17.direction() === 'in'){
+  if (pin17.direction() === "in") {
     readValues["PD5"] = pin17.readSync();
   }
-  if(pin27.direction() === 'in'){
+  if (pin27.direction() === "in") {
     readValues["PD6"] = pin27.readSync();
   }
-  if(pin22.direction() === 'in'){
+  if (pin22.direction() === "in") {
     readValues["PA1"] = pin22.readSync();
   }
-  if(pin0.direction() === 'in'){
+  if (pin0.direction() === "in") {
     readValues["PA2"] = pin0.readSync();
   }
-  if(pin5.direction() === 'in'){
+  if (pin5.direction() === "in") {
     readValues["PA3"] = pin5.readSync();
   }
   res.send(JSON.stringify(readValues));

@@ -16,17 +16,32 @@ class Form extends React.Component {
 
       compileOutput: "",
       flashing: false,
+      flashOutput: "",
     };
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleSubmitFlash = this.handleSubmitFlash.bind(this);
+    this.parseOutput = this.parseOutput.bind(this);
+  }
+
+  componentDidMount() {
+    this.setState({ codeValue: localStorage.getItem("codeValue") });
+    this.setState({ fileName: localStorage.getItem("fileName") });
   }
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
+    localStorage.setItem(event.target.name, event.target.value);
+    console.log(event.target.name);
   }
-
+  parseOutput(output) {
+    output = output.replaceAll("./public/programs-sent/", "");
+    output = output.replaceAll("\\n", "\n");
+    output = output.replace(/"+/g, " ");
+    return output;
+  }
   handleSubmit(event) {
     event.preventDefault();
     this.setState({ isLoading: true });
@@ -52,10 +67,9 @@ class Form extends React.Component {
           axios
             .get("http://192.168.0.111:8082/compile-output")
             .then((res) => {
-              const compOut = JSON.stringify(res.data.data); //.replace( /(?:\r\n|\r|\n)/g,"\n" );
-              //   console.log("res.data:" + JSON.stringify(res.data));
+              const compOut = this.parseOutput(JSON.stringify(res.data.data));
+              console.log(compOut);
               this.setState({ compileOutput: compOut });
-           //   console.log(compOut.replace(/(?:\r\n|\r|\n)/g, "\n"));
             })
             .finally(() => {
               this.setState({ isLoading: false });
@@ -63,14 +77,12 @@ class Form extends React.Component {
             });
         });
     }
-    console.log("frontend " + JSON.stringify(codeSent));
   }
 
   handleSubmitFlash(event) {
     event.preventDefault();
     console.log("flashing..");
     this.setState({ flashing: true }, function () {
-      console.log("First Flashing val:" + this.state.flashing);
       axios
         .post("http://192.168.0.111:8082/flashing", {
           flashValue: this.state.flashing,
@@ -80,30 +92,23 @@ class Form extends React.Component {
         });
       this.setState({ flashing: false });
     });
-    console.log("Last Flashing val:" + this.state.flashing);
   }
-
   handleKeyDown(event) {
     if (event.keyCode === 9) {
       // tab was pressed
       event.preventDefault();
-      var val = this.state.scriptString;
+      var val = this.state.codeValue;
       var start = event.target.selectionStart;
       var end = event.target.selectionEnd;
 
-      this.setState(
-        {
-          scriptString: val.substring(0, start) + "\t" + val.substring(end),
-        },
-        () => {
-          this.input.selectionStart = this.input.selectionEnd = start + 1;
-        }
-      );
+      this.setState({
+        codeValue: val.substring(0, start) + "\t" + val.substring(end),
+      });
     }
   }
   render() {
     if (this.state.isLoading && !this.state.isNameNull) {
-      return <div>Compiling code...</div>;
+      return <div className="conditional-div">Compiling code...</div>;
     } else {
       return (
         <div id="div-form">
@@ -121,8 +126,9 @@ class Form extends React.Component {
               />
               <br />
               <br />
-              <label>File name:&nbsp;</label>
+              <label className="label-description">Filename:&nbsp;</label>
               <input
+                className="filename-input"
                 type="text"
                 name="fileName"
                 value={this.state.fileName}
@@ -139,17 +145,27 @@ class Form extends React.Component {
             <div id="flexbox-compileout-video">
               <div id="compile-output-div">
                 <br />
-                <label className="text-title">Compile output</label>
+                <label className="label-description">Compile output</label>
                 <br />
                 <textarea
                   id="compile-output-textarea"
                   value={this.state.compileOutput}
                   onChange={this.handleChange}
                 />
+                <br />
+                <br />
+                <h2>Flash target to STM8</h2>
+                <button
+                  type="submit"
+                  className="button"
+                  onClick={this.handleSubmitFlash}
+                >
+                  Flash
+                </button>
               </div>
               <div id="video-div">
                 <br />
-                <p className="text-title">Visual output</p>
+                <p className="label-description">Visual output</p>
                 <img
                   className="video-class"
                   src="http://192.168.0.111:8081/"
@@ -158,13 +174,7 @@ class Form extends React.Component {
               </div>
             </div>
           </form>
-          <form onSubmit={this.handleSubmitFlash}>
-            <br />
-            <h2>Flash target to STM8</h2>
-            <button type="submit" className="button">
-              Flash
-            </button>
-          </form>
+          <br />
         </div>
       );
     }

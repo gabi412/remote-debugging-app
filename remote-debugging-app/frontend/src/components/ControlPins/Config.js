@@ -145,20 +145,15 @@ class Config extends React.Component {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success");
-        //    console.log("config ");
         console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
   }
-  componentDidMount() {
-    this.requestValues();
-  }
-
+ 
   sendInOutChanges(event) {
     event.preventDefault();
-
     this.requestValues();
   }
 
@@ -449,7 +444,8 @@ class Config extends React.Component {
 
           <button
             type="submit"
-            className="button-config"
+            className="button"
+            id="button-config"
             onClick={this.sendInOutChanges}
           >
             Apply changes

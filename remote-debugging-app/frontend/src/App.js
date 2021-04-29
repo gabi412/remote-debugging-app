@@ -7,29 +7,31 @@ import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
 import ControlPins from "./components/ControlPins/ControlPins";
 
-function App() {
-  return (
-    <div className="App">
-      <BrowserRouter>
-      <br/>
-        <NavBar />
-        <div>
-          <Switch>
-            <Route exact path="/">
-              <Header />
-              <Home />
-              <Footer />
-            </Route>
-            <Route path="/control-pins">
-              <Header />
-              <ControlPins />
-              <Footer />
-            </Route>
-          </Switch>
-        </div>
-      </BrowserRouter>
-    </div>
-  );
+class App extends React.Component {
+  render() {
+    return (
+      <div className="App">
+        <BrowserRouter>
+          <br />
+          <NavBar />
+          <div>
+            <Switch>
+              <Route exact path="/">
+                <Header />
+                <Home />
+                <Footer />
+              </Route>
+              <Route path="/control-pins">
+                <Header />
+                <ControlPins />
+                <Footer />
+              </Route>
+            </Switch>
+          </div>
+        </BrowserRouter>
+      </div>
+    );
+  }
 }
 
 export default App;

@@ -4,7 +4,7 @@
     font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
 #id-textarea{
-    height: 50vh;
+    height: 60vh;
     width: 55vw;
     text-rendering: auto;
     color: -internal-light-dark(black, white);
@@ -24,7 +24,7 @@
     white-space: pre-wrap;
     overflow-wrap: break-word;
     margin: 0em;
-    font: 400 13.3333px Arial;
+    font: 400 15.3333px Arial;
     border-width: 1px;
     border-style: solid;
     border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
@@ -40,19 +40,33 @@
 }
 
 #compile-output-textarea{
-    height: 480px;
+    height: 360px;
     width: 640px;
     margin-top: 0.5em;
-    border-radius: 5px;
-    border: 2px solid #4b0202;
+    resize: none;
+   
 }
-
+.label-description {
+    font: 18px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-weight: bold;
+    align-content: center;
+}
+.filename-input{
+    width: 9em;
+    height:1.5em;
+}
 #video-div{
     margin-left: 5em;
     
 }
-.video-class{
-    border-radius: 5px;
+.video-class, .filename-input, #compile-output-textarea{
+    border-radius: 4px;
     border: 2px solid #4b0202;
+    
+}
+.conditional-div{
+    font: 25px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+    font-weight: bold;
+    text-align: center;
     
 }

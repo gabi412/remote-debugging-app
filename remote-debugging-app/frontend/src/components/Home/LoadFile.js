@@ -33,7 +33,7 @@ class LoadFile extends React.Component {
           })
           .catch((err) => {
             console.error("myerr " + err);
-            alert("Something went wrong with the server..\nPlease try again");
+            alert("Something went wrong..\nPlease try again");
             this.setState({ isLoading: false });
           });
       }
@@ -48,7 +48,7 @@ class LoadFile extends React.Component {
       return (
         <div>
           <h2>File uploaded!</h2>
-          <p>Name: {this.state.selectedFile.name}</p>
+          <p>File: {this.state.selectedFile.name}</p>
         </div>
       );
     } else {
@@ -71,7 +71,7 @@ class LoadFile extends React.Component {
           <br />
           <br />
           <button className="button" onClick={this.onFileUpload}>
-            Upload!
+            Upload
           </button>
         </div>
         {this.fileData()}

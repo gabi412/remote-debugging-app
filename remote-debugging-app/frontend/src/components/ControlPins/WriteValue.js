@@ -21,15 +21,12 @@ class WriteValue extends React.Component {
         PC4: "0PC4",
         PC3: "0PC3",
         PB4: "0PB4",
-        PB5: "0PB5", 
+        PB5: "0PB5",
       },
     };
     this.handleWriteValChange = this.handleWriteValChange.bind(this);
   }
-  componentDidMount(){
-  //  console.log(this.state.writeValList);
-    
-  }
+
   handleWriteValChange(event) {
     this.props.getWriteValCallback(this.state.writeValList);
     var pinName = event.target.value;
@@ -107,9 +104,7 @@ class WriteValue extends React.Component {
   render() {
     return (
       <div>
-        {
-          //console.log("aici "+this.props.inoutState.PD3[0])
-        }
+  
         <label className="right-text-write">Write</label>
         <ul className="right-write-value-list">
           <li>
@@ -117,9 +112,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PD3}
-              disabled={
-                this.props.inoutState.PD3[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PD3[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PD3">
@@ -135,9 +128,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PD2}
-              disabled={
-                this.props.inoutState.PD2[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PD2[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PD2">
@@ -153,9 +144,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PD1}
-              disabled={
-                this.props.inoutState.PD1[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PD1[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PD1">
@@ -171,9 +160,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PC7}
-              disabled={
-                this.props.inoutState.PC7[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PC7[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PC7">
@@ -189,9 +176,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PC6}
-              disabled={
-                this.props.inoutState.PC6[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PC6[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PC6">
@@ -206,9 +191,7 @@ class WriteValue extends React.Component {
             className="dropdown-class"
             name="configuration"
             value={this.PC5}
-            disabled={
-              this.props.inoutState.PC5[0] === "o" ? true : false
-            }
+            disabled={this.props.inoutState.PC5[0] === "o" ? true : false}
             onChange={this.handleWriteValChange}
           >
             <option id="0" value="0PC5">
@@ -223,9 +206,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PC4}
-              disabled={
-                this.props.inoutState.PC4[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PC4[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PC4">
@@ -240,9 +221,7 @@ class WriteValue extends React.Component {
             className="dropdown-class"
             name="configuration"
             value={this.PC3}
-            disabled={
-              this.props.inoutState.PC3[0] === "o" ? true : false
-            }
+            disabled={this.props.inoutState.PC3[0] === "o" ? true : false}
             onChange={this.handleWriteValChange}
           >
             <option id="0" value="0PC3">
@@ -257,9 +236,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PB4}
-              disabled={
-                this.props.inoutState.PB4[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PB4[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PB4">
@@ -275,9 +252,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PB5}
-              disabled={
-                this.props.inoutState.PB5[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PB5[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PB5">
@@ -296,9 +271,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PD4}
-              disabled={
-                this.props.inoutState.PD4[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PD4[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PD4">
@@ -314,9 +287,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PD5}
-              disabled={
-                this.props.inoutState.PD5[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PD5[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PD5">
@@ -332,9 +303,7 @@ class WriteValue extends React.Component {
               className="dropdownpd6-write-class"
               name="configuration"
               value={this.PD6}
-              disabled={
-                this.props.inoutState.PD6[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PD6[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PD6">
@@ -351,9 +320,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PA1}
-              disabled={
-                this.props.inoutState.PA1[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PA1[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PA1">
@@ -369,9 +336,7 @@ class WriteValue extends React.Component {
               className="dropdownpa2-write-class"
               name="configuration"
               value={this.PA2}
-              disabled={
-                this.props.inoutState.PA2[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PA2[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PA2">
@@ -388,9 +353,7 @@ class WriteValue extends React.Component {
               className="dropdown-class"
               name="configuration"
               value={this.PA3}
-              disabled={
-                this.props.inoutState.PA3[0] === "o" ? true : false
-              }
+              disabled={this.props.inoutState.PA3[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
               <option id="0" value="0PA3">

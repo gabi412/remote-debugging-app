@@ -120,33 +120,13 @@
     right: 105%;
 }
 
-.button-config {
+#button-config {
     position: absolute;
     top: 100%;
     right: 113%;
-    background-color: rgb(138, 15, 15);
-    border: none;
-    border-radius: 2px;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
 }
-
-.button-write {
+#button-read{
     position: absolute;
     top: 100%;
-    right: 60%;
-    background-color: rgb(138, 15, 15);
-    border: none;
-    border-radius: 2px;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-}
-
-.button-config:hover {
-    background-color: rgb(105, 10, 10);
-    ;
+    right: 65%;
 }
