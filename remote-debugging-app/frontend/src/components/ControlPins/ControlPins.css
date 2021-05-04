@@ -43,21 +43,21 @@
 .right-configuration-list {
     list-style-type: none;
     position: absolute;
-    top: 27%;
+    top: 28%;
     right: -26%;
 }
 
 .right-write-value-list {
     list-style-type: none;
     position: absolute;
-    top: 27%;
+    top: 28%;
     right: -42%;
 }
 
 .right-read-value-list {
     list-style-type: none;
     position: absolute;
-    top: 27%;
+    top: 28%;
     right: -58%;
 }
 
@@ -128,5 +128,18 @@
 #button-read{
     position: absolute;
     top: 100%;
-    right: 65%;
+    right: 60%;
+}
+.button-controlpins {
+    background-color: rgb(138, 15, 15);
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    width: 150px;
+    height: 40px;
+    padding: 5px 20px;
+}
+.button-controlpins:hover{
+    background-color:  rgb(105, 10, 10);
 }

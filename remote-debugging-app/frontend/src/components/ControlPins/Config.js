@@ -444,7 +444,7 @@ class Config extends React.Component {
 
           <button
             type="submit"
-            className="button"
+            className="button-controlpins"
             id="button-config"
             onClick={this.sendInOutChanges}
           >

@@ -8,18 +8,6 @@
 body{
     margin-left: 3em;
 }
-.button {
-    background-color: rgb(138, 15, 15);
-    border-radius: 5px;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    width: 150px;
-    height: 50px;
-}
-.button:hover{
-    background-color:  rgb(105, 10, 10);
-}
+
 
 

@@ -1,10 +1,10 @@
 .navbar-item{
-    font-size: 20px;
+    font-size: 22px;
     color: white;
-    padding: 20px;
+    padding: 14px;
     
 }
 .navbar-item:hover{
     text-decoration: none;
-    color: 4b0202;
+    color: #4b0202;
 }

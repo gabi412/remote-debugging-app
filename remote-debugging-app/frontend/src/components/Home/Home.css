@@ -1,9 +1,9 @@
-.code-textarea{
+.code-textarea-class{
     background-color: rgb(51, 46, 46);
     color: #fff;
     font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
-#id-textarea{
+#code-textarea-id{
     height: 60vh;
     width: 55vw;
     text-rendering: auto;
@@ -46,6 +46,12 @@
     resize: none;
    
 }
+#flash-output-textarea{
+    height: 140px;
+    width: 640px;
+    margin-top: 0.5em;
+    resize: none;
+}
 .label-description {
     font: 18px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
     font-weight: bold;
@@ -59,7 +65,7 @@
     margin-left: 5em;
     
 }
-.video-class, .filename-input, #compile-output-textarea{
+.video-class, .filename-input, #compile-output-textarea, #flash-output-textarea{
     border-radius: 4px;
     border: 2px solid #4b0202;
     
@@ -69,4 +75,17 @@
     font-weight: bold;
     text-align: center;
     
+}
+.button-home {
+    background-color: rgb(138, 15, 15);
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    width: 100px;
+    height: 40px;
+    padding: 5px 20px;
+}
+.button-home:hover{
+    background-color:  rgb(105, 10, 10);
 }

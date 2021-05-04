@@ -10,7 +10,6 @@ class Form extends React.Component {
       isLoading: false,
       isNameNull: true,
 
-      scriptString: "",
       selectionStart: "",
       selectionEnd: "",
 
@@ -34,7 +33,7 @@ class Form extends React.Component {
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
     localStorage.setItem(event.target.name, event.target.value);
-    console.log(event.target.name);
+    //  console.log(event.target.name);
   }
   parseOutput(output) {
     output = output.replaceAll("./public/programs-sent/", "");
@@ -45,7 +44,7 @@ class Form extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     this.setState({ isLoading: true });
-    //  this.props.handleLoadingState(true);
+    this.props.handleLoadingState(true);
 
     const codeBody = this.state.codeValue;
     const fileName = this.state.fileName;
@@ -58,23 +57,20 @@ class Form extends React.Component {
       this.setState({ isNameNull: false });
       axios
         .post("http://192.168.0.111:8082/code", codeSent)
+        .then((res) => {
+          if (res) {
+            const compOut = this.parseOutput(JSON.stringify(res.data));
+            this.setState({ compileOutput: compOut });
+          }
+        })
         .catch((err) => {
           console.error("myerr " + err);
           alert("Something went wrong with the server..");
           this.setState({ isLoading: false });
         })
         .finally(() => {
-          axios
-            .get("http://192.168.0.111:8082/compile-output")
-            .then((res) => {
-              const compOut = this.parseOutput(JSON.stringify(res.data.data));
-              console.log(compOut);
-              this.setState({ compileOutput: compOut });
-            })
-            .finally(() => {
-              this.setState({ isLoading: false });
-              //  this.props.handleLoadingState(false);
-            });
+          this.setState({ isLoading: false });
+          this.props.handleLoadingState(false);
         });
     }
   }
@@ -87,6 +83,10 @@ class Form extends React.Component {
         .post("http://192.168.0.111:8082/flashing", {
           flashValue: this.state.flashing,
         })
+        .then((data) => {
+          console.log(data.data);
+          this.setState({ flashOutput: this.parseOutput(data.data) });
+        })
         .catch((err) => {
           console.error(err);
         });
@@ -95,15 +95,20 @@ class Form extends React.Component {
   }
   handleKeyDown(event) {
     if (event.keyCode === 9) {
-      // tab was pressed
       event.preventDefault();
       var val = this.state.codeValue;
       var start = event.target.selectionStart;
       var end = event.target.selectionEnd;
 
-      this.setState({
-        codeValue: val.substring(0, start) + "\t" + val.substring(end),
-      });
+      this.setState(
+        {
+          codeValue: val.substring(0, start) + "\t" + val.substring(end),
+        },
+        () => {
+          start = end = start + 1;
+          return false;
+        }
+      );
     }
   }
   render() {
@@ -117,9 +122,9 @@ class Form extends React.Component {
               <label>Or write your code here:</label>
               <br />
               <textarea
-                id="id-textarea"
+                id="code-textarea-id"
                 name="codeValue"
-                className="code-textarea"
+                className="code-textarea-class"
                 value={this.state.codeValue}
                 onChange={this.handleChange}
                 onKeyDown={this.handleKeyDown}
@@ -135,12 +140,13 @@ class Form extends React.Component {
                 onChange={this.handleChange}
               />
               <br />
-              <input
+              <button
                 type="submit"
-                className="button"
-                value="Compile code"
-                onSubmit={this.handleSubmit}
-              />
+                className="button-home"
+                onClick={this.handleSubmit}
+              >
+                Compile
+              </button>
             </div>
             <div id="flexbox-compileout-video">
               <div id="compile-output-div">
@@ -157,11 +163,20 @@ class Form extends React.Component {
                 <h2>Flash target to STM8</h2>
                 <button
                   type="submit"
-                  className="button"
+                  className="button-home"
                   onClick={this.handleSubmitFlash}
                 >
                   Flash
                 </button>
+                <br />
+                <br />
+                <label className="label-description">Flash output</label>
+                <br />
+                <textarea
+                  readOnly
+                  id="flash-output-textarea"
+                  value={this.state.flashOutput}
+                />
               </div>
               <div id="video-div">
                 <br />

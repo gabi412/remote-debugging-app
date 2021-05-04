@@ -25,6 +25,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/public", express.static(__dirname + "/public"));
 app.use(express.static(__dirname + "/public"));
 
+// global variables to send back to the frontend
+var compileOutput;
+var filePath = "./public/programs-sent"
+var currentFile;
+var sourceNameFile;
+
 // storage for file upload
 var storage = multer.diskStorage({
   destination: "public/programs-sent",
@@ -33,61 +39,11 @@ var storage = multer.diskStorage({
   },
 });
 
-var upload = multer({ storage: storage }).single("file");
-
-// global variables to send back to the frontend
-var compileData;
-var currentFile;
-
 app.get("/", (req, res) => {
   res.status(200);
 });
 
-app.post("/code", (req, res) => {
-  const folder = "./public/programs-sent";
-  const compileScript = "./public/script.sh";
-
-  var codeSent = req.body.codeBody;
-  var fileName = req.body.fileName;
-  res.status(200);
-
-  fs.writeFile(`${folder}/${fileName}`, codeSent, (err) => {
-    if (err) throw err;
-  });
-
-  //const command = `sdcc -mstm8 ${folder}/${fileName} --out-fmt-ihx --all-callee-saves --debug --verbose --stack-auto --fverbose-asm  --float-reent --no-peep`;
-  console.log(`${folder}/${fileName}`);
-
-  var compileOutputFile = path.parse(fileName).name + "-output.txt";
-  var sourceNameFile = path.parse(fileName).name;
-  const result = cp.execFile(
-    compileScript,
-    [`${folder}/${fileName}`],
-    function (error, stdout, stderr) {
-  
-      fs.readFile(
-        `${folder}/${compileOutputFile}`,
-        "utf8",
-        function (err, data) {
-          if (err) {
-            return console.log(err);
-          }
-          compileData = data;
-          res.send({ data: compileData });
-        }
-      );
-      const move = cp.exec(
-        `mv ~/backend/${sourceNameFile}.* ~/backend/public/programs-sent`
-      );
-    }
-  );
-  currentFile = path.parse(fileName).name + ".ihx";
-  // res.send();
-});
-
-app.get("/compile-output", (req, res) => {
-  res.send({ data: compileData });
-});
+var upload = multer({ storage: storage }).single("file");
 
 app.post("/load-file", (req, res) => {
   try {
@@ -104,26 +60,69 @@ app.post("/load-file", (req, res) => {
     res.status(500).send(err);
   }
 });
-app.post("/flashing", (req, res) => {
-  //  console.log("\nFlashing: " + JSON.stringify(req.body.flashValue));
-  var flashVal = JSON.stringify(req.body.flashValue);
-  var compilePath = "./public/programs-sent";
-  if (flashVal === "true") {
-    cp.execSync(
-      `./stm8flash -c stlinkv2 -p stm8s103f3 -w ${compilePath}/${currentFile}`,
-      (error, stdout, stderr) => {
-        if (error) {
-          console.log(`error:${error.message}`);
-        }
-        console.log("next");
-        const removeFiles = cp.exec(
-          `rm ~/backend/public/programs-sent/${currentFile}.*`
-        );
 
+app.post("/code", (req, res) => {
+
+  var codeSent = req.body.codeBody;
+  var fileName = req.body.fileName;
+  res.status(200);
+
+  fs.writeFile(`${filePath}/${fileName}`, codeSent, (err) => {
+    if (err) throw err;
+  });
+
+  sourceNameFile = path.parse(fileName).name;
+
+  const result = cp.exec(
+    `sdcc -mstm8 ${fileName} --out-fmt-ihx --all-callee-saves --debug --verbose --stack-auto --fverbose-asm --float-reent --no-peep`,
+    { cwd: filePath },
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`);
+        compileOutput = error.message;
+      } else if (stdout) {
+        compileOutput = stdout;
+      }
+      else{
+        compileOutput = stderr;
+      } 
+
+      res.send(JSON.stringify(compileOutput));
+
+      const removeFiles = cp.exec(
+        `find ${filePath} -type f -not -name ${sourceNameFile}.ihx -delete`
+      );
+    }
+  );
+  currentFile = sourceNameFile + ".ihx";
+});
+
+app.get("/compile-output", (req, res) => {
+  res.send({ data: compileOutput });
+});
+
+app.post("/flashing", (req, res) => {
+  var flashVal = JSON.stringify(req.body.flashValue);
+  var flashOutput;
+  if (flashVal === "true") {
+    const result = cp.exec(
+      `./stm8flash -c stlinkv2 -p stm8s103f3 -w ${filePath}/${currentFile}`,
+      (error, stdout, stderr) => {
+        if (stderr) {
+          flashOutput = stderr;
+        } else if (error) {
+          flashOutput = error.message;
+        } else {
+          flashOutput = stdout;
+        }
+        res.send(JSON.stringify(flashOutput));
+
+        const removeFiles = cp.exec(
+          `rm ${filePath}/${currentFile}`
+        );
       }
     );
   }
-  res.send(flashVal);
 });
 
 var readValues = {
@@ -152,9 +151,9 @@ var pin0 = new Gpio(0, "in");
 var pin5 = new Gpio(5, "in");
 
 app.post("/config", (req, res) => {
-  Object.keys(readValues).forEach(function (kkey) {
+  Object.keys(readValues).forEach(function (key) {
     //   console.log("Key : " + kkey + ", Value : " + readValues[kkey]);
-    readValues[kkey] = "";
+    readValues[key] = "";
   });
   var values = req.body.values;
   var configIO = req.body.configuration;
@@ -165,7 +164,6 @@ app.post("/config", (req, res) => {
   console.log(writeVal);
 
   Object.keys(configData).forEach(function (key) {
-    //  console.log("Key : " + key + ", Value : " + configData[key]);
     var configOption = configData[key].substr(0, 1);
 
     if (key == "PD4") {
@@ -223,8 +221,7 @@ app.post("/config", (req, res) => {
 });
 
 app.get("/get-values", (req, res) => {
-  //  console.log("\nIn get-values: " + JSON.stringify(readValues));
-  // trebuie sa citesc pinii la un interval de 3 secunde, si ii actualizez in apelul get
+  // verific starea pinilor si daca sunt intrare citesc valoarea pe care o pun in obiectul json
   if (pin4.direction() === "in") {
     readValues["PD4"] = pin4.readSync();
   }

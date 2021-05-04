@@ -32,9 +32,7 @@ class ReadValue extends React.Component {
   componentDidMount(){
     this.readValues();
   }
-  componentDidUpdate(){
-    this.readValues();
-  }
+
   readValues() {
     axios.get("http://192.168.0.111:8082/get-values").then((res) => {
       console.log(res.data);
@@ -50,30 +48,7 @@ class ReadValue extends React.Component {
     event.preventDefault();
     this.readValues();
   }
-  /*
-  async componentDidMount() {
-    console.log(this.state.readValue.PD4);
-    try {
-      this.intervalID = setInterval(async () => {
-        const res = await fetch("http://192.168.0.111:8082/get-values");
-        const pinValues = await res.json();
-        //     console.log(pinValues);
 
-        this.setState(
-          {
-            readValue: pinValues,
-          },
-          () => {
-            console.log("In ReadValue ");
-            console.log(this.state.readValue);
-          }
-        );
-      }, 5000);
-    } catch (e) {
-      console.log(e);
-    }
-  }
-*/
   render() {
     return (
       <div>
@@ -227,7 +202,7 @@ class ReadValue extends React.Component {
             />
           </li>
         </ul>
-        <button type="submit" id="button-read" className="button" onClick={this.handleReadSubmit}>
+        <button type="submit" id="button-read" className="button-controlpins" onClick={this.handleReadSubmit}>
           Read Values
         </button>
       </div>

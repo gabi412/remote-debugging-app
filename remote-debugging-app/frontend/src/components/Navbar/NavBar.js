@@ -20,7 +20,7 @@ class NavBar extends Component {
               </NavLink>
 
               <NavLink className="navbar-item" to="/control-pins">
-                Control pins
+                Control Pins
               </NavLink>
             </div>
         </div>

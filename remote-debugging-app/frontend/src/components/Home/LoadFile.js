@@ -24,7 +24,6 @@ class LoadFile extends React.Component {
         alert("Add a .ihx file!");
       } else {
         //trimit fisierul catre backend
-
         axios
           .post("http://192.168.0.111:8082/load-file", data, {})
           .then((res) => {
@@ -33,13 +32,16 @@ class LoadFile extends React.Component {
           })
           .catch((err) => {
             console.error("myerr " + err);
-            alert("Something went wrong..\nPlease try again");
+            alert("Something went wrong..\nPlease try again.");
             this.setState({ isLoading: false });
           });
       }
     } else {
-      alert("Adauga un fisier!");
+      alert("Please add a file.");
     }
+  };
+  onFileClick = () => {
+    this.setState({ valid: false });
   };
 
   //se afiseaza datele fisierului doar dupa ce s-a incarcat
@@ -48,7 +50,7 @@ class LoadFile extends React.Component {
       return (
         <div>
           <h2>File uploaded!</h2>
-          <p>File: {this.state.selectedFile.name}</p>
+          <p>Your file: {this.state.selectedFile.name}</p>
         </div>
       );
     } else {
@@ -65,12 +67,15 @@ class LoadFile extends React.Component {
     return (
       <div>
         <h2>Upload binary file</h2>
-
         <div>
-          <input type="file" onChange={this.onFileChange} />
+          <input
+            type="file"
+            onChange={this.onFileChange}
+            onClick={this.onFileClick}
+          />
           <br />
           <br />
-          <button className="button" onClick={this.onFileUpload}>
+          <button className="button-home" onClick={this.onFileUpload}>
             Upload
           </button>
         </div>
