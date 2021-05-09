@@ -27,7 +27,7 @@ app.use(express.static(__dirname + "/public"));
 
 // global variables to send back to the frontend
 var compileOutput;
-var filePath = "./public/programs-sent"
+var filePath = "./public/programs-sent";
 var currentFile;
 var sourceNameFile;
 
@@ -62,9 +62,9 @@ app.post("/load-file", (req, res) => {
 });
 
 app.post("/code", (req, res) => {
-
   var codeSent = req.body.codeBody;
   var fileName = req.body.fileName;
+  var errorCompile;
   res.status(200);
 
   fs.writeFile(`${filePath}/${fileName}`, codeSent, (err) => {
@@ -72,22 +72,22 @@ app.post("/code", (req, res) => {
   });
 
   sourceNameFile = path.parse(fileName).name;
-
   const result = cp.exec(
     `sdcc -mstm8 ${fileName} --out-fmt-ihx --all-callee-saves --debug --verbose --stack-auto --fverbose-asm --float-reent --no-peep`,
     { cwd: filePath },
     (error, stdout, stderr) => {
       if (error) {
-        console.log(`error: ${error.message}`);
         compileOutput = error.message;
+        errorCompile = true;
       } else if (stdout) {
         compileOutput = stdout;
-      }
-      else{
+        errorCompile = false;
+      } else {
         compileOutput = stderr;
-      } 
+        errorCompile = false;
+      }
 
-      res.send(JSON.stringify(compileOutput));
+      res.send({ output: compileOutput , error:errorCompile});
 
       const removeFiles = cp.exec(
         `find ${filePath} -type f -not -name ${sourceNameFile}.ihx -delete`
@@ -117,9 +117,7 @@ app.post("/flashing", (req, res) => {
         }
         res.send(JSON.stringify(flashOutput));
 
-        const removeFiles = cp.exec(
-          `rm ${filePath}/${currentFile}`
-        );
+        const removeFiles = cp.exec(`rm ${filePath}/${currentFile}`);
       }
     );
   }

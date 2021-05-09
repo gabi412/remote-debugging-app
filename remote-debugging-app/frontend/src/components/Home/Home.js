@@ -1,7 +1,7 @@
 import React from "react";
-import "./Home.css";
-import Form from "./Form";
+import CompileRun from "./CompileRun";
 import LoadFile from "./LoadFile";
+import "./Home.css";
 
 class Home extends React.Component {
 
@@ -9,7 +9,7 @@ class Home extends React.Component {
     return (
       <div>
         <LoadFile />
-        <Form />
+        <CompileRun />
       </div>
     );
   }

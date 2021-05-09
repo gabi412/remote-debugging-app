@@ -1,8 +1,8 @@
 import React from "react";
-import "./ControlPins.css";
-import photo from "./stm8blue-pinout.png";
 import WriteValue from "./WriteValue";
 import ReadValue from "./ReadValue";
+import "./ControlPins.css";
+import photo from "./stm8blue-pinout.png";
 
 class Config extends React.Component {
   constructor(props) {
@@ -127,15 +127,16 @@ class Config extends React.Component {
     this.setState({ config: tempState });
     //  console.log(this.state.config);
   }
-  requestValues() {
+ 
+  sendInOutChanges(event) {
+    event.preventDefault();
     fetch("http://192.168.0.111:8082/config", {
       method: "POST",
-      mode: "cors", // no-cors, *cors, same-origin
-      cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: "same-origin", // include, *same-origin, omit
+      mode: "cors", 
+      cache: "no-cache", 
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
-        // 'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: JSON.stringify({
         configuration: this.state.config,
@@ -144,17 +145,11 @@ class Config extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Success");
-        console.log(data);
+     //   console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }
- 
-  sendInOutChanges(event) {
-    event.preventDefault();
-    this.requestValues();
   }
 
   render() {
@@ -174,7 +169,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PD3}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPD3">
@@ -189,7 +183,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PD2}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPD2">
@@ -204,7 +197,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PD1}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPD1">
@@ -219,7 +211,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PC7}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPC7">
@@ -234,7 +225,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PC6}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPC6">
@@ -248,7 +238,6 @@ class Config extends React.Component {
             <select
               className="dropdown-class"
               name="configuration"
-              value={this.PC5}
               onChange={this.handleInOutChange}
             >
               <option id="1" value="oPC5">
@@ -262,7 +251,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PC4}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPC4">
@@ -276,7 +264,6 @@ class Config extends React.Component {
             <select
               className="dropdown-class"
               name="configuration"
-              value={this.PC3}
               onChange={this.handleInOutChange}
             >
               <option id="1" value="oPC3">
@@ -290,7 +277,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PB4}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPB4">
@@ -305,7 +291,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PB5}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPB5">
@@ -334,7 +319,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PD4}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPD4">
@@ -349,7 +333,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PD5}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPD5">
@@ -364,7 +347,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PD6}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPD6">
@@ -384,7 +366,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PA1}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPA1">
@@ -399,7 +380,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PA2}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPA2">
@@ -429,7 +409,6 @@ class Config extends React.Component {
               <select
                 className="dropdown-class"
                 name="configuration"
-                value={this.PA3}
                 onChange={this.handleInOutChange}
               >
                 <option id="1" value="oPA3">

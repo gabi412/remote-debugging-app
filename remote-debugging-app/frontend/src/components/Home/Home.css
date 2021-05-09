@@ -3,35 +3,10 @@
     color: #fff;
     font: 14px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
 }
-#code-textarea-id{
-    height: 60vh;
-    width: 55vw;
-    text-rendering: auto;
-    color: -internal-light-dark(black, white);
-    letter-spacing: normal;
-    word-spacing: normal;
-    text-transform: none;
-    text-indent: 0px;
-    text-shadow: none;
-    display: inline-block;
-    text-align: start;
-    appearance: textarea;
-    background-color: -internal-light-dark(rgb(255, 255, 255), rgb(59, 59, 59));
-    -webkit-rtl-ordering: logical;
-    flex-direction: column;
-    resize: auto;
-    cursor: text;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
-    margin: 0em;
-    font: 400 15.3333px Arial;
-    border-width: 1px;
-    border-style: solid;
-    border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
-    border-image: initial;
-    padding: 2px;
-    resize: none;
-    
+
+.CodeMirror{
+    min-height: 60%; 
+    max-width: 80%;
 }
 
 #flexbox-compileout-video{
@@ -45,6 +20,12 @@
     margin-top: 0.5em;
     resize: none;
    
+}
+.compile-output-error{
+    color: red;
+}
+.compile-output-noerror{
+    color: black;
 }
 #flash-output-textarea{
     height: 140px;

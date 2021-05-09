@@ -20,24 +20,40 @@
     height: 340px;
 }
 
-.dropdown-class, .read-box {
+.dropdown-class {
     margin-bottom: 0.4em;
-    height: 22px
+    height: 22px;
 }
 
-.dropdownpd6-write-class {
-    margin-bottom: 2.3em;
-    height: 22px
+.read-box {
+    height: 22px;
+    width: 2em;
+    margin-bottom: 0.4em;
+    text-align: center
 }
 
-.dropdownpa2-write-class {
-    margin-bottom: 6em;
-    height: 22px
+.dropdown-write-class {
+    margin-bottom: 0.4em;
+    width: 2em;
+    height: 22px;
 }
 
+.dropdownpd6-write-class,.dropdownpd6-read-box-class {
+    margin-bottom: 2.1em;
+    height: 22px;
+    width: 2em;
+    text-align: center;
+
+}
+.dropdownpa2-write-class,.dropdownpa2-read-box-class {
+    margin-bottom: 5.5em;
+    height: 22px;
+    width: 2em;
+    text-align: center;
+}
 .stm8-label {
     margin-left: 1.5em;
-    height: 22px;
+    height: 19px;
 }
 
 .right-configuration-list {
@@ -64,25 +80,25 @@
 .left-configuration-list {
     list-style-type: none;
     position: absolute;
-    top: 27%;
+    top: 29%;
     right: 93%;
 }
 
 .left-write-value-list {
     list-style-type: none;
     position: absolute;
-    top: 27%;
+    top: 29%;
     right: 133%;
 }
 
 .left-read-value-list {
     list-style-type: none;
     position: absolute;
-    top: 27%;
+    top: 29%;
     right: 150%;
 }
 
-/* labels for read write and config options */
+/* style labels for read write and config options */
 
 .right-text-read {
     position: absolute;
@@ -120,16 +136,20 @@
     right: 105%;
 }
 
+/* style buttons from control pins */
+
 #button-config {
     position: absolute;
     top: 100%;
     right: 113%;
 }
-#button-read{
+
+#button-read {
     position: absolute;
     top: 100%;
     right: 60%;
 }
+
 .button-controlpins {
     background-color: rgb(138, 15, 15);
     border-radius: 5px;
@@ -140,6 +160,7 @@
     height: 40px;
     padding: 5px 20px;
 }
-.button-controlpins:hover{
-    background-color:  rgb(105, 10, 10);
+
+.button-controlpins:hover {
+    background-color: rgb(105, 10, 10);
 }

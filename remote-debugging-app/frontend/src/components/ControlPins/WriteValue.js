@@ -109,9 +109,8 @@ class WriteValue extends React.Component {
         <ul className="right-write-value-list">
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PD3}
               disabled={this.props.inoutState.PD3[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -125,9 +124,8 @@ class WriteValue extends React.Component {
           </li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PD2}
               disabled={this.props.inoutState.PD2[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -141,9 +139,8 @@ class WriteValue extends React.Component {
           </li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PD1}
               disabled={this.props.inoutState.PD1[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -157,9 +154,8 @@ class WriteValue extends React.Component {
           </li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PC7}
               disabled={this.props.inoutState.PC7[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -173,9 +169,8 @@ class WriteValue extends React.Component {
           </li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PC6}
               disabled={this.props.inoutState.PC6[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -188,9 +183,8 @@ class WriteValue extends React.Component {
             </select>
           </li>
           <select
-            className="dropdown-class"
+            className="dropdown-write-class"
             name="configuration"
-            value={this.PC5}
             disabled={this.props.inoutState.PC5[0] === "o" ? true : false}
             onChange={this.handleWriteValChange}
           >
@@ -203,9 +197,8 @@ class WriteValue extends React.Component {
           </select>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PC4}
               disabled={this.props.inoutState.PC4[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -218,9 +211,8 @@ class WriteValue extends React.Component {
             </select>
           </li>
           <select
-            className="dropdown-class"
+            className="dropdown-write-class"
             name="configuration"
-            value={this.PC3}
             disabled={this.props.inoutState.PC3[0] === "o" ? true : false}
             onChange={this.handleWriteValChange}
           >
@@ -233,9 +225,8 @@ class WriteValue extends React.Component {
           </select>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PB4}
               disabled={this.props.inoutState.PB4[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -249,9 +240,8 @@ class WriteValue extends React.Component {
           </li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PB5}
               disabled={this.props.inoutState.PB5[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -268,9 +258,8 @@ class WriteValue extends React.Component {
         <ul className="left-write-value-list">
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PD4}
               disabled={this.props.inoutState.PD4[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -284,9 +273,8 @@ class WriteValue extends React.Component {
           </li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PD5}
               disabled={this.props.inoutState.PD5[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -302,7 +290,6 @@ class WriteValue extends React.Component {
             <select
               className="dropdownpd6-write-class"
               name="configuration"
-              value={this.PD6}
               disabled={this.props.inoutState.PD6[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -317,9 +304,8 @@ class WriteValue extends React.Component {
           <li></li>
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PA1}
               disabled={this.props.inoutState.PA1[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -335,7 +321,6 @@ class WriteValue extends React.Component {
             <select
               className="dropdownpa2-write-class"
               name="configuration"
-              value={this.PA2}
               disabled={this.props.inoutState.PA2[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >
@@ -350,9 +335,8 @@ class WriteValue extends React.Component {
 
           <li>
             <select
-              className="dropdown-class"
+              className="dropdown-write-class"
               name="configuration"
-              value={this.PA3}
               disabled={this.props.inoutState.PA3[0] === "o" ? true : false}
               onChange={this.handleWriteValChange}
             >

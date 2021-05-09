@@ -29,7 +29,7 @@ class ReadValue extends React.Component {
   componentWillUnmount() {
     clearInterval(this.intervalID);
   }
-  componentDidMount(){
+  componentDidMount() {
     this.readValues();
   }
 
@@ -37,14 +37,12 @@ class ReadValue extends React.Component {
     axios.get("http://192.168.0.111:8082/get-values").then((res) => {
       console.log(res.data);
       const pinValues = res.data;
-      this.setState(
-        {
-          readValue: pinValues,
-        },
-      );
+      this.setState({
+        readValue: pinValues,
+      });
     });
   }
-  handleReadSubmit(event){
+  handleReadSubmit(event) {
     event.preventDefault();
     this.readValues();
   }
@@ -57,7 +55,6 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PD4}
@@ -66,7 +63,6 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PD5}
@@ -75,16 +71,14 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
-              className="dropdownpd6-write-class"
+              className="dropdownpd6-read-box-class"
               value={this.state.readValue.PD6}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PA1}
@@ -93,16 +87,14 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
-              className="dropdownpa2-write-class"
+              className="dropdownpa2-read-box-class"
               value={this.state.readValue.PA2}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PA3}
@@ -114,7 +106,6 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PD3}
@@ -123,7 +114,6 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PD2}
@@ -132,7 +122,6 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
               value={this.state.readValue.PD1}
@@ -141,68 +130,66 @@ class ReadValue extends React.Component {
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValueC7}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValueC6}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValuePC5}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValuePC4}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValuePC3}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValuePB4}
             />
           </li>
           <li>
             <input
               readOnly
-              size="1"
               type="text"
               className="read-box"
-              value={this.state.readValuePD4}
+              value={this.state.readValuePB5}
             />
           </li>
         </ul>
-        <button type="submit" id="button-read" className="button-controlpins" onClick={this.handleReadSubmit}>
+        <button
+          type="submit"
+          id="button-read"
+          className="button-controlpins"
+          onClick={this.handleReadSubmit}
+        >
           Read Values
         </button>
       </div>
