@@ -132,7 +132,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValueC7}
+              value={this.state.readValue.PC7}
             />
           </li>
           <li>
@@ -140,7 +140,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValueC6}
+              value={this.state.readValue.PC6}
             />
           </li>
           <li>
@@ -148,7 +148,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValuePC5}
+              value={this.state.readValue.PC5}
             />
           </li>
           <li>
@@ -156,7 +156,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValuePC4}
+              value={this.state.readValue.PC4}
             />
           </li>
           <li>
@@ -164,7 +164,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValuePC3}
+              value={this.state.readValue.PC3}
             />
           </li>
           <li>
@@ -172,7 +172,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValuePB4}
+              value={this.state.readValue.PB4}
             />
           </li>
           <li>
@@ -180,7 +180,7 @@ class ReadValue extends React.Component {
               readOnly
               type="text"
               className="read-box"
-              value={this.state.readValuePB5}
+              value={this.state.readValue.PB5}
             />
           </li>
         </ul>

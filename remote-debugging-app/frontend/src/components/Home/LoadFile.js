@@ -17,23 +17,27 @@ class LoadFile extends React.Component {
     // creare obiect de tip FormData
     const data = new FormData();
     data.append("file", this.state.selectedFile);
+    
     if (this.state.selectedFile != null) {
       var extension = this.state.selectedFile.name.split(".")[1];
 
       if (!(extension === "ihx")) {
         alert("Add a .ihx file!");
       } else {
+        console.log(data);
         //trimit fisierul catre backend
         axios
           .post("http://192.168.0.111:8082/load-file", data, {})
           .then((res) => {
             this.setState({ valid: true });
             console.log(res.statusText);
+
           })
           .catch((err) => {
             console.error("myerr " + err);
             alert("Something went wrong..\nPlease try again.");
             this.setState({ isLoading: false });
+            
           });
       }
     } else {

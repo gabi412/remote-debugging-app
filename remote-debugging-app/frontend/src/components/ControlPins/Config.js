@@ -55,77 +55,15 @@ class Config extends React.Component {
   }
 
   handleInOutChange(event) {
-    var pinName = event.target.value;
+    
     var tempState = this.state.config;
-    switch (pinName) {
-      case "oPD3":
-      case "iPD3":
-        tempState.PD3 = event.target.value;
-        break;
-      case "iPD2":
-      case "oPD2":
-        tempState.PD2 = event.target.value;
-        break;
-      case "iPD1":
-      case "oPD1":
-        tempState.PD1 = event.target.value;
-        break;
-      case "iPD6":
-      case "oPD6":
-        tempState.PD6 = event.target.value;
-        break;
-      case "iPD5":
-      case "oPD5":
-        tempState.PD5 = event.target.value;
-        break;
-      case "iPD4":
-      case "oPD4":
-        tempState.PD4 = event.target.value;
-        break;
-      case "iPC7":
-      case "oPC7":
-        tempState.PC7 = event.target.value;
-        break;
-      case "iPC6":
-      case "oPC6":
-        tempState.PC6 = event.target.value;
-        break;
-      case "iPC5":
-      case "oPC5":
-        tempState.PC5 = event.target.value;
-        break;
-      case "iPC4":
-      case "oPC4":
-        tempState.PC4 = event.target.value;
-        break;
-      case "iPC3":
-      case "oPC3":
-        tempState.PC3 = event.target.value;
-        break;
-      case "iPB4":
-      case "oPB4":
-        tempState.PB4 = event.target.value;
-        break;
-      case "iPB5":
-      case "oPB5":
-        tempState.PB5 = event.target.value;
-        break;
-      case "iPA1":
-      case "oPA1":
-        tempState.PA1 = event.target.value;
-        break;
-      case "iPA2":
-      case "oPA2":
-        tempState.PA2 = event.target.value;
-        break;
-      case "iPA3":
-      case "oPA3":
-        tempState.PA3 = event.target.value;
-        break;
-      default:
-    }
+    var pinName = event.target.value; 
+    Object.keys(tempState).forEach(function(key){ 
+      if (pinName.substr(1,3) === key)
+        tempState[key] = pinName;
+    });
     this.setState({ config: tempState });
-    //  console.log(this.state.config);
+ //   console.log(this.state.config);
   }
  
   sendInOutChanges(event) {
@@ -145,7 +83,7 @@ class Config extends React.Component {
     })
       .then((response) => response.json())
       .then((data) => {
-     //   console.log(data);
+  //     console.log(data);
       })
       .catch((error) => {
         console.error("Error:", error);

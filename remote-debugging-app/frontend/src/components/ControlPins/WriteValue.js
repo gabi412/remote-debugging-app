@@ -31,73 +31,11 @@ class WriteValue extends React.Component {
     this.props.getWriteValCallback(this.state.writeValList);
     var pinName = event.target.value;
     var tempState = this.state.writeValList;
-    switch (pinName) {
-      case "0PD3":
-      case "1PD3":
-        tempState.PD3 = event.target.value;
-        break;
-      case "1PD2":
-      case "0PD2":
-        tempState.PD2 = event.target.value;
-        break;
-      case "1PD1":
-      case "0PD1":
-        tempState.PD1 = event.target.value;
-        break;
-      case "1PD6":
-      case "0PD6":
-        tempState.PD6 = event.target.value;
-        break;
-      case "1PD5":
-      case "0PD5":
-        tempState.PD5 = event.target.value;
-        break;
-      case "1PD4":
-      case "0PD4":
-        tempState.PD4 = event.target.value;
-        break;
-      case "1PC7":
-      case "0PC7":
-        tempState.PC7 = event.target.value;
-        break;
-      case "1PC6":
-      case "0PC6":
-        tempState.PC6 = event.target.value;
-        break;
-      case "1PC5":
-      case "0PC5":
-        tempState.PC5 = event.target.value;
-        break;
-      case "1PC4":
-      case "0PC4":
-        tempState.PC4 = event.target.value;
-        break;
-      case "1PC3":
-      case "0PC3":
-        tempState.PC3 = event.target.value;
-        break;
-      case "1PB4":
-      case "0PB4":
-        tempState.PB4 = event.target.value;
-        break;
-      case "1PB5":
-      case "0PB5":
-        tempState.PB5 = event.target.value;
-        break;
-      case "1PA1":
-      case "0PA1":
-        tempState.PA1 = event.target.value;
-        break;
-      case "1PA2":
-      case "0PA2":
-        tempState.PA2 = event.target.value;
-        break;
-      case "1PA3":
-      case "0PA3":
-        tempState.PA3 = event.target.value;
-        break;
-      default:
-    }
+
+    Object.keys(tempState).forEach(function(key){ 
+      if (pinName.substr(1,3) === key)
+        tempState[key] = pinName;
+    });
     this.setState({ writeValList: tempState });
     console.log(this.state.writeValList);
   }

@@ -14,7 +14,7 @@ var Gpio = require("onoff").Gpio;
 app.use(bodyParser.json());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "http://192.168.0.111:3000",
     credentials: true,
   })
 );
@@ -87,7 +87,7 @@ app.post("/code", (req, res) => {
         errorCompile = false;
       }
 
-      res.send({ output: compileOutput , error:errorCompile});
+      res.send({ output: compileOutput, error: errorCompile });
 
       const removeFiles = cp.exec(
         `find ${filePath} -type f -not -name ${sourceNameFile}.ihx -delete`
@@ -141,103 +141,132 @@ var readValues = {
   PB4: "",
   PB5: "",
 };
-var pin4 = new Gpio(4, "in");
-var pin17 = new Gpio(17, "in");
-var pin27 = new Gpio(27, "in");
-var pin22 = new Gpio(22, "in");
-var pin0 = new Gpio(0, "in");
-var pin5 = new Gpio(5, "in");
+
+const Raspi = require("raspi-io").RaspiIO;
+const five = require("johnny-five");
+const board = new five.Board({
+  io: new Raspi(),
+  repl: false,
+});
+
+var expander1 = new five.Expander({
+  controller: "MCP23008",
+  address: 0x20,
+});
+var expander2 = new five.Expander({
+  controller: "MCP23008",
+  address: 0x21,
+});
+
+var expander1Pins = {
+  PD4: { pin: 0 },
+  PD5: { pin: 1 },
+  PD6: { pin: 2 },
+  PA1: { pin: 3 },
+  PA2: { pin: 4 },
+  PA3: { pin: 5 },
+  PD3: { pin: 6 },
+  PD2: { pin: 7 },
+};
+var expander2Pins = {
+  PD1: { pin: 0 },
+  PC7: { pin: 1 },
+  PC6: { pin: 2 },
+  PC5: { pin: 3 },
+  PC4: { pin: 4 },
+  PC3: { pin: 5 },
+  PB4: { pin: 6 },
+  PB5: { pin: 7 },
+};
+var configIO = {
+  PD4: "oPD4",
+  PD5: "oPD5",
+  PD6: "oPD6",
+  PA1: "oPA1",
+  PA2: "oPA2",
+  PA3: "oPA3",
+  PD3: "oPD3",
+  PD2: "oPD2",
+  PD1: "oPD1",
+  PC7: "oPC7",
+  PC6: "oPC6",
+  PC5: "oPC5",
+  PC4: "oPC4",
+  PC3: "oPC3",
+  PB4: "oPB4",
+  PB5: "oPB5",
+};
+board.on("ready", function () {
+  Object.keys(expander1Pins).forEach(function (expander1Key) {
+    var pinExpander1 = expander1Pins[expander1Key].pin;
+    expander1.digitalRead(pinExpander1, function (value) {
+      readValues[expander1Key] = value;
+    });
+  });
+  Object.keys(expander2Pins).forEach(function (expander2Key) {
+    var pinExpander2 = expander2Pins[expander2Key].pin;
+    expander2.digitalRead(pinExpander2, function (value) {
+      readValues[expander2Key] = value;
+    });
+  });
+});
 
 app.post("/config", (req, res) => {
-  Object.keys(readValues).forEach(function (key) {
-    //   console.log("Key : " + kkey + ", Value : " + readValues[kkey]);
-    readValues[key] = "";
-  });
   var values = req.body.values;
-  var configIO = req.body.configuration;
+  configIO = req.body.configuration;
 
   configData = JSON.parse(JSON.stringify(configIO));
-  //  console.log(configData);
   writeVal = JSON.parse(JSON.stringify(values));
-  console.log(writeVal);
 
-  Object.keys(configData).forEach(function (key) {
-    var configOption = configData[key].substr(0, 1);
-
-    if (key == "PD4") {
-      if (configOption == "i") {
-        pin4.setDirection("out");
-        pin4.writeSync(parseInt(writeVal["PD4"].substr(0, 1)));
-      } else {
-        pin4.setDirection("in");
+  Object.keys(configData).forEach(function (stmKey) {
+    Object.keys(expander1Pins).forEach(function (expander1Key) {
+      var pinExpander1 = expander1Pins[expander1Key].pin;
+      var configOption = configData[expander1Key].substr(0, 1);
+      if (expander1Key === stmKey) {
+        if (configOption === "i") {
+          readValues[expander1Key] = " ";
+          expander1.pinMode(pinExpander1, expander1.MODES.OUTPUT);
+          expander1.digitalWrite(
+            pinExpander1,
+            parseInt(writeVal[expander1Key].substr(0, 1))
+          );
+        } else {
+          expander1.pinMode(pinExpander1, expander1.MODES.INPUT);
+          expander1.pullUp(pinExpander1,expander1.HIGH);
+        }
       }
-    }
-    if (key == "PD5") {
-      if (configOption == "i") {
-        pin17.setDirection("out");
-        pin17.writeSync(parseInt(writeVal["PD5"].substr(0, 1)));
-      } else {
-        pin17.setDirection("in");
+    });
+    Object.keys(expander2Pins).forEach(function (expander2Key) {
+      var pinExpander2 = expander2Pins[expander2Key].pin;
+      var configOption = configData[expander2Key].substr(0, 1);
+      if (expander2Key === stmKey) {
+        if (configOption === "i") {
+          readValues[expander2Key] = " ";
+          expander2.pinMode(pinExpander2, expander2.MODES.OUTPUT);
+          expander2.digitalWrite(
+            pinExpander2,
+            parseInt(writeVal[expander2Key].substr(0, 1))
+          );
+        } else {
+          expander2.pinMode(pinExpander2, expander2.MODES.INPUT);
+          expander2.pullUp(pinExpander2,expander2.HIGH);
+        }
       }
-    }
-
-    if (key == "PD6") {
-      if (configOption == "i") {
-        pin27.setDirection("out");
-        pin27.writeSync(parseInt(writeVal["PD6"].substr(0, 1)));
-      } else {
-        pin27.setDirection("in");
-      }
-    }
-    if (key == "PA1") {
-      if (configOption == "i") {
-        pin22.setDirection("out");
-        pin22.writeSync(parseInt(writeVal["PA1"].substr(0, 1)));
-      } else {
-        pin22.setDirection("in");
-      }
-    }
-    if (key == "PA2") {
-      if (configOption == "i") {
-        pin0.setDirection("out");
-        pin0.writeSync(parseInt(writeVal["PA2"].substr(0, 1)));
-      } else {
-        pin0.setDirection("in");
-      }
-    }
-    if (key == "PA3") {
-      if (configOption == "i") {
-        pin5.setDirection("out");
-        pin5.writeSync(parseInt(writeVal["PA3"].substr(0, 1)));
-      } else {
-        pin5.setDirection("in");
-      }
-    }
+    });
   });
-  console.log(JSON.stringify(readValues));
+
+  // console.log(JSON.stringify(readValues));
   res.send(JSON.stringify(readValues));
 });
 
 app.get("/get-values", (req, res) => {
-  // verific starea pinilor si daca sunt intrare citesc valoarea pe care o pun in obiectul json
-  if (pin4.direction() === "in") {
-    readValues["PD4"] = pin4.readSync();
-  }
-  if (pin17.direction() === "in") {
-    readValues["PD5"] = pin17.readSync();
-  }
-  if (pin27.direction() === "in") {
-    readValues["PD6"] = pin27.readSync();
-  }
-  if (pin22.direction() === "in") {
-    readValues["PA1"] = pin22.readSync();
-  }
-  if (pin0.direction() === "in") {
-    readValues["PA2"] = pin0.readSync();
-  }
-  if (pin5.direction() === "in") {
-    readValues["PA3"] = pin5.readSync();
-  }
+  
+  Object.keys(configIO).forEach(function (key) {
+    if (configIO[key].substr(0, 1) === "i") {
+      readValues[key] = "";
+    }
+  });
+  
   res.send(JSON.stringify(readValues));
 });
 
