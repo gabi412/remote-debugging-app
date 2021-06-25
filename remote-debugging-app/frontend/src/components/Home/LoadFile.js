@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 
+
 class LoadFile extends React.Component {
   state = {
     // initial, niciun fisier nu este selectat
@@ -11,13 +12,14 @@ class LoadFile extends React.Component {
   // la selectarea unui fisier
   onFileChange = (event) => {
     this.setState({ selectedFile: event.target.files[0], loaded: 0 });
+
   };
 
   onFileUpload = () => {
     // creare obiect de tip FormData
     const data = new FormData();
     data.append("file", this.state.selectedFile);
-    
+    console.log(this.state.selectedFile);
     if (this.state.selectedFile != null) {
       var extension = this.state.selectedFile.name.split(".")[1];
 
@@ -27,7 +29,7 @@ class LoadFile extends React.Component {
         console.log(data);
         //trimit fisierul catre backend
         axios
-          .post("http://192.168.0.111:8082/load-file", data, {})
+          .post("http://192.168.0.197:8082/load-file", data, {})
           .then((res) => {
             this.setState({ valid: true });
             console.log(res.statusText);
@@ -68,6 +70,7 @@ class LoadFile extends React.Component {
   };
 
   render() {
+    if(!this.props.isCompiling){
     return (
       <div>
         <h2>Upload binary file</h2>
@@ -86,7 +89,9 @@ class LoadFile extends React.Component {
         {this.fileData()}
       </div>
     );
-  }
+  }else{
+    return(<div></div>)
+  }}
 }
 
 export default LoadFile;

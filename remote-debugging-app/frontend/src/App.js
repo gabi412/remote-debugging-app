@@ -1,11 +1,50 @@
 import React from "react";
-import Header from "./components/Header/Header";
-import NavBar from "./components/Navbar/NavBar";
-import Home from "./components/Home/Home";
-import Footer from "./components/Footer/Footer";
-import { BrowserRouter, Switch, Route } from "react-router-dom";
 import "./App.css";
-import ControlPins from "./components/ControlPins/ControlPins";
+import Home from "./components/Home/Home";
+import PinsControl from "./components/PinsControl/PinsControl";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+
+import { NavLink } from "react-router-dom";
+
+function NavBar(){
+  return (
+    <nav>
+      <div className="navbar-container">
+      
+          <div className="navbar-start">
+            <NavLink className="navbar-item" to="/">
+              Home
+            </NavLink>
+
+            <NavLink className="navbar-item" to="/pins-control">
+              Pins Control
+            </NavLink>
+          </div>
+      </div>
+    </nav>
+  );
+}
+function Header() {
+    return (
+      <div>
+        <br />
+        <br />
+        <h1 align="center" className="header-h1">
+          Remote Embedded Lab
+        </h1>
+      </div>
+    );
+}
+function Footer() {
+  return (
+    <div>
+      <br />
+      <br />
+      <hr></hr>
+      <footer>&copy;2021 Tătărușanu Gabriel</footer>
+    </div>
+  );
+}
 
 class App extends React.Component {
   render() {
@@ -21,9 +60,9 @@ class App extends React.Component {
                 <Home />
                 <Footer />
               </Route>
-              <Route path="/control-pins">
+              <Route path="/pins-control">
                 <Header />
-                <ControlPins />
+                <PinsControl />
                 <Footer />
               </Route>
             </Switch>
