@@ -6,10 +6,8 @@ const fs = require("fs");
 const path = require("path");
 var multer = require("multer");
 const cp = require("child_process");
-const util = require("util");
 const app = express();
 
-var Gpio = require("onoff").Gpio;
 
 app.use(bodyParser.json());
 app.use(
