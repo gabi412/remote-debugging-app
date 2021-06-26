@@ -6,8 +6,8 @@ const fs = require("fs");
 const path = require("path");
 var multer = require("multer");
 const cp = require("child_process");
+const util = require("util");
 const app = express();
-
 
 app.use(bodyParser.json());
 app.use(
@@ -30,8 +30,6 @@ var filePath = "./public/programs-sent";
 var currentFile;
 var sourceNameFile;
 
-var pinsDetected = {};
-
 // storage for file upload
 var storage = multer.diskStorage({
   destination: "public/programs-sent",
@@ -39,11 +37,12 @@ var storage = multer.diskStorage({
     cb(null, Date.now() + "-" + file.originalname);
   },
 });
-var upload = multer({ storage: storage }).single("file");
 
 app.get("/", (req, res) => {
   res.status(200);
 });
+
+var upload = multer({ storage: storage }).single("file");
 
 app.post("/load-file", (req, res) => {
   try {
@@ -60,7 +59,7 @@ app.post("/load-file", (req, res) => {
     res.status(500).send(err);
   }
 });
-
+var pinsDetected = {};
 app.post("/code", (req, res) => {
   var codeSent = req.body.codeBody;
   var fileName = req.body.fileName;
@@ -116,6 +115,9 @@ app.post("/code", (req, res) => {
   currentFile = sourceNameFile + ".ihx";
 });
 
+app.get("/compile-output", (req, res) => {
+  res.status(200).send({ data: compileOutput });
+});
 app.get("/pins-detected", (req, res) => {
   res.status(200).send({ pinsDetected: pinsDetected });
 });
@@ -141,6 +143,14 @@ app.post("/flashing", (req, res) => {
   }
 });
 
+
+const Raspi = require("raspi-io").RaspiIO;
+const five = require("johnny-five");
+const board = new five.Board({
+  io: new Raspi({ enableSerial: false }),
+  repl: false,
+  debug: false,
+});
 var readValues = {
   PD4: "",
   PD5: "",
@@ -159,14 +169,6 @@ var readValues = {
   PB4: "",
   PB5: "",
 };
-
-const Raspi = require("raspi-io").RaspiIO;
-const five = require("johnny-five");
-const board = new five.Board({
-  io: new Raspi({ enableSerial: false }),
-  repl: false,
-  debug: false,
-});
 
 var expander1 = new five.Expander({
   controller: "MCP23008",
@@ -198,25 +200,6 @@ var expander2Pins = {
   PC3: { pin: 7 },
 };
 
-var configIO = {
-  PD4: "oPD4",
-  PD5: "oPD5",
-  PD6: "oPD6",
-  PA1: "oPA1",
-  PA2: "oPA2",
-  PA3: "oPA3",
-  PD3: "oPD3",
-  PD2: "oPD2",
-  PD1: "oPD1",
-  PC7: "oPC7",
-  PC6: "oPC6",
-  PC5: "oPC5",
-  PC4: "oPC4",
-  PC3: "oPC3",
-  PB4: "oPB4",
-  PB5: "oPB5",
-};
-
 board.on("ready", function () {
   Object.keys(expander1Pins).forEach(function (expander1Key) {
     var pinExpander1 = expander1Pins[expander1Key].pin;
@@ -238,10 +221,6 @@ board.on("ready", function () {
 
 app.post("/config", (req, res) => {
   var config = req.body.pins;
-  for (let i = 0; i < config.length; i++) {
-    var pin = config[i].pinName;
-    configIO[pin] = config[i].writeVal;
-  }
 
   for (let i = 0; i < config.length; i++) {
     configOption = config[i].state.substr(0, 1);
@@ -253,9 +232,6 @@ app.post("/config", (req, res) => {
       //    var configOption = configData[expander1Key].substr(0, 1);
       if (expander1Key === stmKey) {
         if (selected === true) {
-          console.log(stmKey);
-          console.log(configOption);
-          console.log(writeVal);
           if (configOption === "i") {
             readValues[expander1Key] = " ";
             expander1.pinMode(pinExpander1, expander1.MODES.OUTPUT);
@@ -272,9 +248,6 @@ app.post("/config", (req, res) => {
       var pinExpander2 = expander2Pins[expander2Key].pin;
       if (expander2Key === stmKey) {
         if (selected === true) {
-          console.log(stmKey);
-          console.log(configOption);
-          console.log(writeVal);
           if (configOption === "i") {
             readValues[expander2Key] = " ";
             expander2.pinMode(pinExpander2, expander2.MODES.OUTPUT);
@@ -293,15 +266,10 @@ app.post("/config", (req, res) => {
 });
 
 app.get("/get-values", (req, res) => {
-  Object.keys(configIO).forEach(function (key) {
-    if (configIO[key].substr(0, 1) === "i") {
-      readValues[key] = "";
-    }
-  });
-
   res.send(JSON.stringify(readValues));
 });
 
+const host = "192.168.0.198";
 const port = 8082;
 var server = app.listen(port);
 

@@ -9,8 +9,7 @@ import { NavLink } from "react-router-dom";
 function NavBar(){
   return (
     <nav>
-      <div className="navbar-container">
-      
+      <div className="navbar-container">   
           <div className="navbar-start">
             <NavLink className="navbar-item" to="/">
               Home
