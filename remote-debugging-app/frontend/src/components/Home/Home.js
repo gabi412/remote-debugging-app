@@ -1,5 +1,5 @@
 import React from "react";
-import CompileRun from "./CompileRun";
+import CompileFlash from "./CompileFlash";
 import LoadFile from "./LoadFile";
 import "./Home.css";
 
@@ -17,7 +17,7 @@ class Home extends React.Component {
     return (
       <div>
         <LoadFile isCompiling = {this.state.isCompiling}/>
-        <CompileRun handleCompilingState={this.setCompileState.bind(this)}/>
+        <CompileFlash handleCompilingState={this.setCompileState.bind(this)}/>
       </div>
     );
   }

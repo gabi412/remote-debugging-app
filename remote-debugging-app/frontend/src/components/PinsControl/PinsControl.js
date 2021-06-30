@@ -135,11 +135,8 @@ class PinsControl extends React.Component {
   }
   componentDidMount() {
     axios.get("http://192.168.0.197:8082/pins-detected").then((res) => {
-      console.log(res.data.pinsDetected);
       const pinsDetected = res.data.pinsDetected;
-
       var tempState = this.state.pins;
-
       for (let i = 0; i < tempState.length; i++) {
         Object.keys(pinsDetected).forEach(function (key) {
           if (tempState[i].pinName === key) {
@@ -147,11 +144,10 @@ class PinsControl extends React.Component {
             tempState[i].state = pinsDetected[key];
           }
         });
-
+      }
         this.setState({
           pins: tempState,
         });
-      }
     });
   }
 

@@ -40,7 +40,7 @@ function Footer() {
       <br />
       <br />
       <hr></hr>
-      <footer>&copy;2021 Tătărușanu Gabriel</footer>
+      <footer>&copy;2021 Tatarusanu Gabriel</footer>
     </div>
   );
 }

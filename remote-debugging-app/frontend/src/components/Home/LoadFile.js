@@ -1,45 +1,42 @@
 import React from "react";
 import axios from "axios";
 
-
 class LoadFile extends React.Component {
   state = {
-    // initial, niciun fisier nu este selectat
     selectedFile: null,
     valid: false,
   };
 
-  // la selectarea unui fisier
   onFileChange = (event) => {
-    this.setState({ selectedFile: event.target.files[0], loaded: 0 });
-
+    this.setState({ selectedFile: event.target.files[0] });
   };
 
   onFileUpload = () => {
-    // creare obiect de tip FormData
+    //create FormData object
     const data = new FormData();
     data.append("file", this.state.selectedFile);
-    console.log(this.state.selectedFile);
     if (this.state.selectedFile != null) {
       var extension = this.state.selectedFile.name.split(".")[1];
-
       if (!(extension === "ihx")) {
-        alert("Add a .ihx file!");
+        alert(
+          `${this.state.selectedFile.name} is not valid.\nPlease add a .ihx file!`
+        );
       } else {
+        //send file to back-end
         console.log(data);
-        //trimit fisierul catre backend
-        axios
-          .post("http://192.168.0.197:8082/load-file", data, {})
+        axios({
+          method: "post",
+          url: "http://192.168.0.197:8082/load-file",
+          data: data,
+          headers: { "Content-Type": "multipart/form-data" },
+        })
           .then((res) => {
             this.setState({ valid: true });
-            console.log(res.statusText);
-
           })
           .catch((err) => {
-            console.error("myerr " + err);
+            console.error("Error on uploading " + err);
             alert("Something went wrong..\nPlease try again.");
             this.setState({ isLoading: false });
-            
           });
       }
     } else {
@@ -70,28 +67,30 @@ class LoadFile extends React.Component {
   };
 
   render() {
-    if(!this.props.isCompiling){
-    return (
-      <div>
-        <h2>Upload binary file</h2>
+    if (!this.props.isCompiling) {
+      return (
         <div>
-          <input
-            type="file"
-            onChange={this.onFileChange}
-            onClick={this.onFileClick}
-          />
-          <br />
-          <br />
-          <button className="button-home" onClick={this.onFileUpload}>
-            Upload
-          </button>
+          <h2>Upload binary file</h2>
+          <div>
+            <input
+              type="file"
+              onChange={this.onFileChange}
+              onClick={this.onFileClick}
+              accept=".ihx"
+            />
+            <br />
+            <br />
+            <button className="button-home" onClick={this.onFileUpload}>
+              Upload
+            </button>
+          </div>
+          {this.fileData()}
         </div>
-        {this.fileData()}
-      </div>
-    );
-  }else{
-    return(<div></div>)
-  }}
+      );
+    } else {
+      return <div></div>;
+    }
+  }
 }
 
 export default LoadFile;

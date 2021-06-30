@@ -1,15 +1,11 @@
 const logger = require("morgan");
 const cors = require("cors");
 const express = require("express");
-const bodyParser = require("body-parser");
-const fs = require("fs");
 const path = require("path");
 var multer = require("multer");
 const cp = require("child_process");
-const util = require("util");
 const app = express();
 
-app.use(bodyParser.json());
 app.use(
   cors({
     //  origin: "http://localhost:3000",
@@ -28,122 +24,10 @@ app.use(express.static(__dirname + "/public"));
 var compileOutput;
 var filePath = "./public/programs-sent";
 var currentFile;
-var sourceNameFile;
-
-// storage for file upload
-var storage = multer.diskStorage({
-  destination: "public/programs-sent",
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-
-app.get("/", (req, res) => {
-  res.status(200);
-});
-
-var upload = multer({ storage: storage }).single("file");
-
-app.post("/load-file", (req, res) => {
-  try {
-    upload(req, res, function (err) {
-      currentFile = req.file.filename;
-      if (err instanceof multer.MulterError) {
-        return res.status(500).json(err);
-      } else if (err) {
-        return res.status(500).json(err);
-      }
-      return res.status(200).send(req.file);
-    });
-  } catch (err) {
-    res.status(500).send(err);
-  }
-});
 var pinsDetected = {};
-app.post("/code", (req, res) => {
-  var codeSent = req.body.codeBody;
-  var fileName = req.body.fileName;
-  var errorCompile;
-  pinsDetected = {};
+var isCompiled;
 
-  fs.writeFile(`${filePath}/${fileName}`, codeSent, (err) => {
-    if (err) throw err;
-  });
-
-  sourceNameFile = path.parse(fileName).name;
-  const result = cp.exec(
-    `sdcc -mstm8 ${fileName} --out-fmt-ihx --all-callee-saves --debug --verbose --stack-auto --fverbose-asm --float-reent --no-peep`,
-    { cwd: filePath },
-    (error, stdout, stderr) => {
-      if (error) {
-        compileOutput = error.message;
-        errorCompile = true;
-      } else if (stdout) {
-        compileOutput = stdout;
-        errorCompile = false;
-
-        //parse code body to detect pins used and set the variable that contains pins states
-        code = codeSent.replace(/\s/g, "").toUpperCase();
-        var ports = ["A", "B", "C", "D"];
-        for (let i = 0; i < ports.length; i++) {
-          for (let j = 1; j < 8; j++) {
-            if (
-              code.includes(`P${ports[i]}_DDR|=1<<${j}`) ||
-              code.includes(`P${ports[i]}_DDR|=(1<<${j})`)
-            ) {
-              pinsDetected[`P${ports[i]}${j}`] = `oP${ports[i]}${j}`;
-            }
-
-            if (
-              code.includes(`P${ports[i]}_DDR&=~(1<<${j})`) ||
-              code.includes(`P${ports[i]}_IDR>>${j}`)
-            ) {
-              pinsDetected[`P${ports[i]}${j}`] = `iP${ports[i]}${j}`;
-            }
-          }
-        }
-      } else {
-        compileOutput = stderr;
-        errorCompile = false;
-      }
-      res.status(200).send({ output: compileOutput, error: errorCompile });
-      const removeFiles = cp.exec(
-        `find ${filePath} -type f -not -name ${sourceNameFile}.ihx -delete`
-      );
-    }
-  );
-  currentFile = sourceNameFile + ".ihx";
-});
-
-app.get("/compile-output", (req, res) => {
-  res.status(200).send({ data: compileOutput });
-});
-app.get("/pins-detected", (req, res) => {
-  res.status(200).send({ pinsDetected: pinsDetected });
-});
-
-app.post("/flashing", (req, res) => {
-  var flashVal = JSON.stringify(req.body.flashValue);
-  var flashOutput;
-  if (flashVal === "true") {
-    const result = cp.exec(
-      `./stm8flash -c stlinkv2 -p stm8s103f3 -w ${filePath}/${currentFile}`,
-      (error, stdout, stderr) => {
-        if (stderr) {
-          flashOutput = stderr;
-        } else if (error) {
-          flashOutput = error.message;
-        } else {
-          flashOutput = stdout;
-        }
-        res.status(200).send(JSON.stringify(flashOutput));
-        const removeFiles = cp.exec(`rm ${filePath}/${currentFile}`);
-      }
-    );
-  }
-});
-
-
+// variables used in j5 library;
 const Raspi = require("raspi-io").RaspiIO;
 const five = require("johnny-five");
 const board = new five.Board({
@@ -151,24 +35,6 @@ const board = new five.Board({
   repl: false,
   debug: false,
 });
-var readValues = {
-  PD4: "",
-  PD5: "",
-  PD6: "",
-  PA1: "",
-  PA2: "",
-  PA3: "",
-  PD3: "",
-  PD2: "",
-  PD1: "",
-  PC7: "",
-  PC6: "",
-  PC5: "",
-  PC4: "",
-  PC3: "",
-  PB4: "",
-  PB5: "",
-};
 
 var expander1 = new five.Expander({
   controller: "MCP23008",
@@ -199,8 +65,138 @@ var expander2Pins = {
   PC4: { pin: 6 },
   PC3: { pin: 7 },
 };
+var readValues = {
+  PD4: "",
+  PD5: "",
+  PD6: "",
+  PA1: "",
+  PA2: "",
+  PA3: "",
+  PD3: "",
+  PD2: "",
+  PD1: "",
+  PC7: "",
+  PC6: "",
+  PC5: "",
+  PC4: "",
+  PC3: "",
+  PB4: "",
+  PB5: "",
+};
 
-board.on("ready", function () {
+// storage for file upload
+var storage = multer.diskStorage({
+  destination: "public/programs-sent",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+var upload = multer({ storage: storage }).single("file");
+
+app.post("/load-file", (req, res) => {
+  try {
+    upload(req, res, function (err) {
+      if (req.file) {
+        currentFile = req.file.filename;
+      }
+      isCompiled = false;
+      if (err instanceof multer.MulterError) {
+        return res.status(500).json(err);
+      } else if (err) {
+        return res.status(500).json(err);
+      }
+      return res.status(200).send(req.file);
+    });
+  } catch (err) {
+    res.status(500).send(err);
+  }
+});
+
+app.post("/code", (req, res) => {
+  var codeSent = JSON.stringify(req.body.codeSent);
+  var fileName = "main.c";
+  var binaryFile = "main.ihx";
+  var errorCompile;
+
+  pinsDetected = {};
+
+  const result = cp.exec(
+    `echo ${codeSent} > ${filePath}/${fileName}`,
+    (error, stdout, stderr) => {
+      const compile = cp.exec(
+        `sdcc -mstm8 ${fileName} --out-fmt-ihx --all-callee-saves --debug --verbose --stack-auto --float-reent --no-peep`,
+        {
+          cwd: filePath,
+        },
+        (error, stdout, stderr) => {
+          if (error) {
+            compileOutput = error.message;
+            errorCompile = true;
+          } else if (stdout) {
+            compileOutput = stdout;
+            errorCompile = false;
+
+            //parse code body to detect pins used and set the variable that contains pins states
+            code = codeSent.replace(/\s/g, "").toUpperCase();
+            var ports = ["A", "B", "C", "D"];
+            for (let i = 0; i < ports.length; i++) {
+              for (let j = 1; j < 8; j++) {
+                // output mode
+                if (
+                  code.includes(`P${ports[i]}_DDR|=1<<${j}`) ||
+                  code.includes(`P${ports[i]}_DDR|=(1<<${j})`) ||
+                  code.includes(`P${ports[i]}_ODR|=1<<${j}`) ||
+                  code.includes(`P${ports[i]}_ODR|=(1<<${j})`) ||
+                  code.includes(`P${ports[i]}_ODR&=~(1<<${j})`) ||
+                  code.includes(`P${ports[i]}_ODR^=1<<${j}`) ||
+                  code.includes(`P${ports[i]}_ODR^=(1<<${j})`)
+                ) {
+                  pinsDetected[`P${ports[i]}${j}`] = `oP${ports[i]}${j}`;
+                }
+                // input mode
+                if (
+                  code.includes(`P${ports[i]}_DDR&=~(1<<${j})`) ||
+                  code.includes(`P${ports[i]}_IDR>>${j}`)
+                ) {
+                  pinsDetected[`P${ports[i]}${j}`] = `iP${ports[i]}${j}`;
+                }
+              }
+            }
+          } else {
+            compileOutput = stderr;
+            errorCompile = false;
+          }
+          res.status(200).send({ output: compileOutput, error: errorCompile });
+        }
+      );
+    }
+  );
+  currentFile = binaryFile;
+  isCompiled = true;
+});
+app.post("/flash", (req, res) => {
+  if (isCompiled === false) {
+    pinsDetected = {};
+  }
+  resetExpandersPins();
+  const result = cp.exec(
+    `./stm8flash -c stlinkv2 -p stm8s103f3 -w ${filePath}/${currentFile}`,
+    (error, stdout, stderr) => {
+      if (stderr) {
+        flashOutput = stderr;
+      } else if (error) {
+        flashOutput = error.message;
+      } else {
+        flashOutput = stdout;
+      }
+      res.status(200).send(JSON.stringify(flashOutput));
+      const removeFiles = cp.exec(`rm ${filePath}/${currentFile}`);
+    }
+  );
+});
+
+function resetExpandersPins() {
   Object.keys(expander1Pins).forEach(function (expander1Key) {
     var pinExpander1 = expander1Pins[expander1Key].pin;
     expander1.pinMode(pinExpander1, expander1.MODES.INPUT);
@@ -217,11 +213,14 @@ board.on("ready", function () {
       readValues[expander2Key] = value;
     });
   });
+}
+
+board.on("ready", () => {
+  resetExpandersPins();
 });
 
 app.post("/config", (req, res) => {
   var config = req.body.pins;
-
   for (let i = 0; i < config.length; i++) {
     configOption = config[i].state.substr(0, 1);
     stmKey = config[i].pinName;
@@ -268,8 +267,11 @@ app.post("/config", (req, res) => {
 app.get("/get-values", (req, res) => {
   res.send(JSON.stringify(readValues));
 });
+app.get("/pins-detected", (req, res) => {
+  res.status(200).send({ pinsDetected: pinsDetected });
+});
 
-const host = "192.168.0.198";
+const host = "192.168.0.197";
 const port = 8082;
 var server = app.listen(port);
 

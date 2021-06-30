@@ -8,59 +8,59 @@ require("codemirror/theme/monokai.css");
 require("codemirror/mode/clike/clike");
 require("codemirror/mode/javascript/javascript");
 
-class CompileRun extends React.Component {
+var compileOutput = "";
+var flashOutput = "";
+var compileErr = false;
+var flashErr = false;
+
+class CompileFlash extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       codeValue: "//start coding",
-      fileName: "main.c",
-
       isLoading: false,
       flashing: false,
-
-      compileOutput: "",
-      flashOutput: "",
-
-      compileError: false,
     };
 
     this.handleChangeCodeMirror = this.handleChangeCodeMirror.bind(this);
     this.handleSubmitCode = this.handleSubmitCode.bind(this);
     this.handleSubmitFlash = this.handleSubmitFlash.bind(this);
+    this.parseOutput = this.parseOutput.bind(this);
   }
 
   componentDidMount() {
-    //    var file = localStorage.getItem("fileName");
     var code = localStorage.getItem("codeValue");
-
     if (code === null) {
       code = "//start coding";
     }
     this.setState({ codeValue: code });
-    //  this.setState({ fileName: file });
+  }
+  parseOutput(output) {
+    output = output.replaceAll("./public/programs-sent/", "");
+    output = output.replaceAll("\\n", "\n");
+    output = output.replace(/"+/g, "");
+    return output;
   }
 
-  
   handleSubmitCode(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     this.setState({ isLoading: true });
     this.props.handleCompilingState(true);
+    const codeSent = this.state.codeValue;
 
-    const codeBody = this.state.codeValue;
-    const fileName = this.state.fileName;
-    const codeSent = { codeBody, fileName };
     axios
-      .post("http://192.168.0.197:8082/code", codeSent)
+      .post("http://192.168.0.197:8082/code", { codeSent })
       .then((res) => {
         if (res) {
           const errorCompile = JSON.stringify(res.data.error);
           const compOut = this.parseOutput(JSON.stringify(res.data.output));
           if (errorCompile === "true") {
-            this.setState({ compileError: true });
+            compileErr = true;
           } else {
-            this.setState({ compileError: false });
+            compileErr = false;
           }
-          this.setState({ compileOutput: compOut });
+    //      this.setState({ compileOutput: compOut });
+          compileOutput = compOut;
         }
       })
       .catch((err) => {
@@ -76,16 +76,11 @@ class CompileRun extends React.Component {
 
   handleSubmitFlash(event) {
     event.preventDefault();
-
     this.setState({ flashing: true }, function () {
       axios
-        .post("http://192.168.0.197:8082/flashing", {
-          flashValue: this.state.flashing,
-        })
+        .post("http://192.168.0.197:8082/flash")
         .then((data) => {
-          //    console.log(this.state.flashing);
-          //    console.log(data.data);
-          this.setState({ flashOutput: this.parseOutput(data.data) });
+          flashOutput = this.parseOutput(data.data);
         })
         .catch((err) => {
           console.error(err);
@@ -152,62 +147,60 @@ class CompileRun extends React.Component {
                 Or write your code here:
               </label>
               <br />
-              {this.state.fileName}
+              main.c
               <CodeMirror
                 defaultValue={localStorage.getItem("codeValue")}
                 value={this.state.codeValue}
                 options={{
                   theme: "monokai",
                   tabSize: 5,
+                  indentUnit: 5,
                   mode: "javascript", //clike nu ofera schimbari
                   lineNumbers: true,
                 }}
                 onChange={this.handleChangeCodeMirror}
               />
-
-           
               <br />
               <input value="Compile" type="submit" className="button-home" />
             </div>
-            <div id="flexbox-compileout-video">
-              <div id="compile-output-div">
-                <br />
-                <label className="label-description">Compile output</label>
-                <br />
-                <textarea
-                  readOnly
-                  id="compile-output-textarea"
-                  className={
-                    this.state.compileError
-                      ? "compile-output-error"
-                      : "compile-output-noerror"
-                  }
-                  value={this.state.compileOutput}
-                />
-                <br />
-                <br />
-                {flashComponent}
-                <br />
-                <br />
-                <label className="label-description">Flash output</label>
-                <br />
-                <textarea
-                  readOnly
-                  id="flash-output-textarea"
-                  value={this.state.flashOutput}
-                />
-              </div>
-              <div id="video-div">
-                <br />
-                <p className="label-description">Visual output</p>
-                <img
-                  className="video-class"
-                  src="http://192.168.0.197:8081/"
-                  alt="streaming-video"
-                ></img>
-              </div>
-            </div>
           </form>
+          <div id="flexbox-compileout-video">
+            <div id="compile-output-div">
+              <br />
+              <label className="label-description">Compile output</label>
+              <br />
+              <textarea
+                readOnly
+                id="compile-output-textarea"
+                className={
+                  compileErr ? "compile-output-error" : "compile-output-noerror"
+                }
+                value={compileOutput}
+              />
+              <br />
+              <br />
+              {flashComponent}
+              <br />
+              <br />
+              <label className="label-description">Flash output</label>
+              <br />
+              <textarea
+                readOnly
+                id="flash-output-textarea"
+                value={flashOutput}
+              />
+            </div>
+            <div id="video-div">
+              <br />
+              <p className="label-description">Visual output</p>
+              <img
+                className="video-class"
+                src="http://192.168.0.197:8081/"
+                alt="streaming-video"
+              ></img>
+            </div>
+          </div>
+
           <br />
         </div>
       );
@@ -215,4 +208,4 @@ class CompileRun extends React.Component {
   }
 }
 
-export default CompileRun;
+export default CompileFlash;

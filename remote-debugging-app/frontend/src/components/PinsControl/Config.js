@@ -2,11 +2,13 @@ import React from "react";
 import WriteValue from "./WriteValue";
 import ReadValue from "./ReadValue";
 import photo from "./stm8blue-pinout.png";
+import axios from "axios";
 class Config extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       pins: this.props.pins,
+      sendingChanges: false,
     };
     this.handleInOutChange = this.handleInOutChange.bind(this);
     this.sendInOutChanges = this.sendInOutChanges.bind(this);
@@ -33,21 +35,8 @@ class Config extends React.Component {
   }
 
   sendInOutChanges(event) {
-    console.log(this.state.pins);
-
-    event.preventDefault();
-    fetch("http://192.168.0.197:8082/config", {
-      method: "POST",
-      mode: "cors",
-      cache: "no-cache",
-      credentials: "same-origin",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        pins: this.state.pins,
-      }),
-    })
+    axios
+      .post("http://192.168.0.197:8082/config", { pins: this.state.pins })
       .then((response) => response.json())
       .then((data) => {
         //     console.log(data);
@@ -96,7 +85,7 @@ class Config extends React.Component {
                 return "";
               }
             })}
-          </ul>    
+          </ul>
           <ul className="right-configuration-list">
             {this.state.pins.map((pin, index) => {
               if (index >= 6) {
@@ -134,10 +123,7 @@ class Config extends React.Component {
 
           {/* set 0/1 value list for all pins */}
 
-          <WriteValue
-            getPinsCallback={this.getPins}
-            pins={this.state.pins}
-          />
+          <WriteValue getPinsCallback={this.getPins} pins={this.state.pins} />
           <ReadValue pins={this.state.pins} />
 
           {/* set input/output list for left side pins */}

@@ -28,7 +28,7 @@ class WriteValue extends React.Component {
       <div>
         <label className="left-text-write">Write</label>
         <ul className="left-write-value-list">
-          {this.state.writeValue.map(({ pinName, writeVal, state }, index) => {
+          {this.state.writeValue.map(({ pinName, selected, writeVal, state }, index) => {
             if (index < 6) {
               return (
                 <li key={index}>
@@ -41,7 +41,7 @@ class WriteValue extends React.Component {
                         : "dropdown-class"
                     }
                     name="configuration"
-                    disabled={state[0] === "o" ? true : false}
+                    disabled={state[0] === "o" ? true : selected === false ? true : false}
                     onChange={this.handleWriteValChange}
                   >
                     <option id="0" value={`0${pinName}`}>
@@ -60,14 +60,14 @@ class WriteValue extends React.Component {
         </ul>
         <label className="right-text-write">Write</label>
         <ul className="right-write-value-list">
-          {this.state.writeValue.map(({ pinName, writeVal, state }, index) => {
+          {this.state.writeValue.map(({ pinName, selected,writeVal, state }, index) => {
             if (index >= 6) {
               return (
                 <li key={index}>
                   <select
                     className="dropdown-write-class"
                     name="configuration"
-                    disabled={state[0] === "o" ? true : false}
+                    disabled={state[0] === "o" ? true : selected === false ? true : false}
                     onChange={this.handleWriteValChange}
                   >
                     <option id="0" value={`0${pinName}`}>
