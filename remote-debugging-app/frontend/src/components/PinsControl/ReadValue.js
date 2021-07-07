@@ -5,7 +5,7 @@ class ReadValue extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-       readValue:this.props.pins
+      readValue: this.props.pins,
     };
     this.handleSubmitRead = this.handleSubmitRead.bind(this);
   }
@@ -16,22 +16,24 @@ class ReadValue extends React.Component {
 
   readValues() {
     var temp = this.state.readValue;
-    axios.get("http://192.168.0.197:8082/get-values").then((res) => {
-      //  console.log(res.data);
-      const pinValues = res.data;
-      //   console.log(pinValues);
-      Object.keys(pinValues).forEach(function (key) {
-        for (let i = 0; i < temp.length; i++) {
-          if (temp[i].pinName === key) {
-            temp[i].readVal = pinValues[key];
+    axios
+      .get("http://192.168.0.197:8082/get-values")
+      .then((res) => {
+        const pinValues = res.data;
+        Object.keys(pinValues).forEach(function (key) {
+          for (let i = 0; i < temp.length; i++) {
+            if (temp[i].pinName === key) {
+              temp[i].readVal = pinValues[key];
+            }
           }
-        }
+        });
+        this.setState({
+          readValue: temp,
+        });
+      })
+      .catch((err) => {
+        console.error("Get /get-values err:" + err);
       });
-      this.setState({
-        readValue: temp,
-      });
-    });
-
   }
   handleSubmitRead(event) {
     event.preventDefault();
@@ -68,7 +70,7 @@ class ReadValue extends React.Component {
         </ul>
         <label className="left-text-read">Read</label>
         <ul className="right-read-value-list">
-          {this.state.readValue.map(({ pinName, readVal }, index) => {  
+          {this.state.readValue.map(({ pinName, readVal }, index) => {
             if (index >= 6) {
               return (
                 <li key={index}>
@@ -85,7 +87,7 @@ class ReadValue extends React.Component {
             }
           })}
         </ul>
-    
+
         <button
           type="submit"
           id="button-read"

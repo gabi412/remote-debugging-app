@@ -191,12 +191,25 @@ app.post("/flash", (req, res) => {
         flashOutput = stdout;
       }
       res.status(200).send(JSON.stringify(flashOutput));
-      const removeFiles = cp.exec(`rm ${filePath}/${currentFile}`);
+      const removeFile = cp.exec(`rm ${filePath}/${currentFile}`);
     }
   );
 });
 
 function resetExpandersPins() {
+  Object.keys(expander1Pins).forEach(function (expander1Key) {
+    var pinExpander1 = expander1Pins[expander1Key].pin;
+    expander1.pinMode(pinExpander1, expander1.MODES.INPUT);
+    expander1.pullUp(pinExpander1, expander1.HIGH);
+  });
+  Object.keys(expander2Pins).forEach(function (expander2Key) {
+    var pinExpander2 = expander2Pins[expander2Key].pin;
+    expander2.pinMode(pinExpander2, expander2.MODES.INPUT);
+    expander2.pullUp(pinExpander2, expander2.HIGH);
+  });
+}
+
+board.on("ready", () => {
   Object.keys(expander1Pins).forEach(function (expander1Key) {
     var pinExpander1 = expander1Pins[expander1Key].pin;
     expander1.pinMode(pinExpander1, expander1.MODES.INPUT);
@@ -213,10 +226,6 @@ function resetExpandersPins() {
       readValues[expander2Key] = value;
     });
   });
-}
-
-board.on("ready", () => {
-  resetExpandersPins();
 });
 
 app.post("/config", (req, res) => {
@@ -259,13 +268,11 @@ app.post("/config", (req, res) => {
       }
     });
   }
-
-  // console.log(JSON.stringify(readValues));
-  res.send(JSON.stringify(readValues));
+  res.status(200).send(JSON.stringify(config));
 });
 
 app.get("/get-values", (req, res) => {
-  res.send(JSON.stringify(readValues));
+  res.status(200).send(JSON.stringify(readValues));
 });
 app.get("/pins-detected", (req, res) => {
   res.status(200).send({ pinsDetected: pinsDetected });
@@ -273,6 +280,6 @@ app.get("/pins-detected", (req, res) => {
 
 const host = "192.168.0.197";
 const port = 8082;
-var server = app.listen(port);
+app.listen(port);
 
 console.log(`Server running at ${host}:${port}`);

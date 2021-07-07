@@ -7,23 +7,23 @@ class LoadFile extends React.Component {
     valid: false,
   };
 
-  onFileChange = (event) => {
+  handleFileChange(event) {
     this.setState({ selectedFile: event.target.files[0] });
-  };
+  }
 
-  onFileUpload = () => {
-    //create FormData object
+  handleFileUpload() {
+    //create FormData object, append file and send it to server
+
     const data = new FormData();
+    const extensions = ["ihx", "hex", "ihex"];
     data.append("file", this.state.selectedFile);
     if (this.state.selectedFile != null) {
       var extension = this.state.selectedFile.name.split(".")[1];
-      if (!(extension === "ihx")) {
+      if (!extensions.includes(extension)) {
         alert(
-          `${this.state.selectedFile.name} is not valid.\nPlease add a .ihx file!`
+          `${this.state.selectedFile.name} is not valid.\nPlease add a .ihx, .hex or .ihex file!`
         );
       } else {
-        //send file to back-end
-        console.log(data);
         axios({
           method: "post",
           url: "http://192.168.0.197:8082/load-file",
@@ -42,12 +42,10 @@ class LoadFile extends React.Component {
     } else {
       alert("Please add a file.");
     }
-  };
-  onFileClick = () => {
-    this.setState({ valid: false });
-  };
-
-  //se afiseaza datele fisierului doar dupa ce s-a incarcat
+  }
+  handleFileClick() {
+    this.setState({ valid: false }); // reset File Uploaded message when selecting another file
+  }
   fileData = () => {
     if (this.state.selectedFile && this.state.valid) {
       return (
@@ -74,13 +72,16 @@ class LoadFile extends React.Component {
           <div>
             <input
               type="file"
-              onChange={this.onFileChange}
-              onClick={this.onFileClick}
+              onChange={this.handleFileChange.bind(this)}
+              onClick={this.handleFileClick.bind(this)}
               accept=".ihx"
             />
             <br />
             <br />
-            <button className="button-home" onClick={this.onFileUpload}>
+            <button
+              className="button-home"
+              onClick={this.handleFileUpload.bind(this)}
+            >
               Upload
             </button>
           </div>
@@ -88,7 +89,7 @@ class LoadFile extends React.Component {
         </div>
       );
     } else {
-      return <div></div>;
+      return "";
     }
   }
 }

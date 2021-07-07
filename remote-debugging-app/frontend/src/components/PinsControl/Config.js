@@ -8,7 +8,6 @@ class Config extends React.Component {
     super(props);
     this.state = {
       pins: this.props.pins,
-      sendingChanges: false,
     };
     this.handleInOutChange = this.handleInOutChange.bind(this);
     this.sendInOutChanges = this.sendInOutChanges.bind(this);
@@ -20,9 +19,8 @@ class Config extends React.Component {
   }
 
   handleInOutChange(event) {
-    var pins = event.target.value;
-    console.log(pins);
 
+    var pins = event.target.value;
     var temp = this.state.pins;
     for (let i = 0; i < temp.length; i++) {
       if (temp[i].pinName === pins.substr(1, 3)) {
@@ -31,18 +29,16 @@ class Config extends React.Component {
       }
     }
     this.setState({ pins: temp });
-    //console.log(this.state.pins);
   }
 
-  sendInOutChanges(event) {
+  sendInOutChanges() {
     axios
       .post("http://192.168.0.197:8082/config", { pins: this.state.pins })
-      .then((response) => response.json())
       .then((data) => {
         //     console.log(data);
       })
       .catch((error) => {
-        console.error("Error:", error);
+        console.error("Post /config err:", error);
       });
   }
 
@@ -118,15 +114,12 @@ class Config extends React.Component {
               }
             })}
           </ul>
-          {/* set input/output list for right side pins */}
-          <label className="right-text-config">Config</label>
 
-          {/* set 0/1 value list for all pins */}
+          <label className="right-text-config">Config</label>
 
           <WriteValue getPinsCallback={this.getPins} pins={this.state.pins} />
           <ReadValue pins={this.state.pins} />
 
-          {/* set input/output list for left side pins */}
           <label className="left-text-config">Config</label>
 
           <button

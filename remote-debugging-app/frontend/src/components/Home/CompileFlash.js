@@ -11,7 +11,6 @@ require("codemirror/mode/javascript/javascript");
 var compileOutput = "";
 var flashOutput = "";
 var compileErr = false;
-var flashErr = false;
 
 class CompileFlash extends React.Component {
   constructor(props) {
@@ -35,10 +34,11 @@ class CompileFlash extends React.Component {
     }
     this.setState({ codeValue: code });
   }
+
   parseOutput(output) {
     output = output.replaceAll("./public/programs-sent/", "");
-    output = output.replaceAll("\\n", "\n");
-    output = output.replace(/"+/g, "");
+    output = output.replaceAll("\\n", "\n"); 
+    output = output.replace(/"+/g, ""); //remove quotes
     return output;
   }
 
@@ -59,12 +59,11 @@ class CompileFlash extends React.Component {
           } else {
             compileErr = false;
           }
-    //      this.setState({ compileOutput: compOut });
           compileOutput = compOut;
         }
       })
       .catch((err) => {
-        console.error("myerr " + err);
+        console.error("Post /code err " + err);
         alert("Something went wrong with the server..");
         this.setState({ isLoading: false });
       })
@@ -83,7 +82,7 @@ class CompileFlash extends React.Component {
           flashOutput = this.parseOutput(data.data);
         })
         .catch((err) => {
-          console.error(err);
+          console.error("Post /flash err " + err);
           alert("Something went wrong with the server..");
         })
         .finally(() => {

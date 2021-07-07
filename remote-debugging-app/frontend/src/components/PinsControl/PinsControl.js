@@ -134,21 +134,26 @@ class PinsControl extends React.Component {
     this.setState({ pins: tempState });
   }
   componentDidMount() {
-    axios.get("http://192.168.0.197:8082/pins-detected").then((res) => {
-      const pinsDetected = res.data.pinsDetected;
-      var tempState = this.state.pins;
-      for (let i = 0; i < tempState.length; i++) {
-        Object.keys(pinsDetected).forEach(function (key) {
-          if (tempState[i].pinName === key) {
-            tempState[i].selected = true;
-            tempState[i].state = pinsDetected[key];
-          }
-        });
-      }
+    axios
+      .get("http://192.168.0.197:8082/pins-detected")
+      .then((res) => {
+        const pinsDetected = res.data.pinsDetected;
+        var tempState = this.state.pins;
+        for (let i = 0; i < tempState.length; i++) {
+          Object.keys(pinsDetected).forEach(function (key) {
+            if (tempState[i].pinName === key) {
+              tempState[i].selected = true;
+              tempState[i].state = pinsDetected[key];
+            }
+          });
+        }
         this.setState({
           pins: tempState,
         });
-    });
+      })
+      .catch((err) => {
+        console.error("Get /pins-detected err " + err);
+      });
   }
 
   render() {

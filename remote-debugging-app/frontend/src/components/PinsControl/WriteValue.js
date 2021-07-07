@@ -60,7 +60,7 @@ class WriteValue extends React.Component {
         </ul>
         <label className="right-text-write">Write</label>
         <ul className="right-write-value-list">
-          {this.state.writeValue.map(({ pinName, selected,writeVal, state }, index) => {
+          {this.state.writeValue.map(({ pinName, selected, state }, index) => {
             if (index >= 6) {
               return (
                 <li key={index}>

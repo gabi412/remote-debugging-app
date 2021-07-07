@@ -16,7 +16,7 @@ class Home extends React.Component {
   render() {
     return (
       <div>
-        <LoadFile isCompiling = {this.state.isCompiling}/>
+        <LoadFile isCompiling = {this.state.isCompiling}/> 
         <CompileFlash handleCompilingState={this.setCompileState.bind(this)}/>
       </div>
     );
