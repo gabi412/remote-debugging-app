@@ -19,10 +19,9 @@ class LoadFile extends React.Component {
     data.append("file", this.state.selectedFile);
     if (this.state.selectedFile != null) {
       var extension = this.state.selectedFile.name.split(".")[1];
-      if (!extensions.includes(extension)) {
-        alert(
-          `${this.state.selectedFile.name} is not valid.\nPlease add a .ihx, .hex or .ihex file!`
-        );
+      if (!extensions.includes(extension)) {    
+	 alert(
+             `${this.state.selectedFile.name} is not valid.\nPlease add a .ihx, .hex or .ihex file!`);
       } else {
         axios({
           method: "post",
@@ -74,7 +73,7 @@ class LoadFile extends React.Component {
               type="file"
               onChange={this.handleFileChange.bind(this)}
               onClick={this.handleFileClick.bind(this)}
-              accept=".ihx"
+              accept=".ihx, .hex, .ihex"
             />
             <br />
             <br />

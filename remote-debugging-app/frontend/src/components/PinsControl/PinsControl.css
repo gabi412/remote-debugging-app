@@ -192,3 +192,7 @@
     font-weight: bold;
     align-content: center;
 }
+.checkbox-pins{
+    display: table;
+    margin: 0 auto;
+}

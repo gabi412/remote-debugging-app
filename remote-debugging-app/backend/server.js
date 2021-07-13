@@ -88,7 +88,7 @@ var readValues = {
 var storage = multer.diskStorage({
   destination: "public/programs-sent",
   filename: function (req, file, cb) {
-    cb(null, file.originalname);
+    cb(null, file.originalname.replace(/\s/g, ''));
   },
 });
 
@@ -101,6 +101,7 @@ app.post("/load-file", (req, res) => {
         currentFile = req.file.filename;
       }
       isCompiled = false;
+      currentFile = currentFile.replace(/\s/g, '');
       if (err instanceof multer.MulterError) {
         return res.status(500).json(err);
       } else if (err) {
@@ -180,6 +181,7 @@ app.post("/flash", (req, res) => {
     pinsDetected = {};
   }
   resetExpandersPins();
+  console.log(currentFile);
   const result = cp.exec(
     `./stm8flash -c stlinkv2 -p stm8s103f3 -w ${filePath}/${currentFile}`,
     (error, stdout, stderr) => {
